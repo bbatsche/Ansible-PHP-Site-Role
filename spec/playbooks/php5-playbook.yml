@@ -1,0 +1,52 @@
+---
+- hosts: all
+  vars_files:
+  - "../../defaults/main.yml"
+  - "../../vars/main.yml"
+  vars:
+    site_type: php
+    domain: phpenv-test.dev
+    php_version: 5.6.18
+    pecl_extensions:
+    - name: yaml
+      version: 1.2.0
+    - name: redis
+      version: 2.2.7
+    - name: imagick
+      version: 3.4.0
+  pre_tasks:
+  - name: Delete previous composer packages
+    file: path={{ phpenv_root }}/versions/{{ php_version }}/composer/{{ item }} state=absent
+    with_items:
+    - composer.json
+    - composer.lock
+    - vendor
+  - name: Create Disabled Function Test
+    copy:
+      content: "<?php shell_exec('pwd');"
+      dest: "{{ http_root }}/{{ domain }}/public/disabled_functions_test.php"
+  - name: Create Openbase Dir Test
+    copy:
+      content: "<?php include '/etc/passwd';"
+      dest: "{{ http_root }}/{{ domain }}/public/open_basedir_test.php"
+  - name: Create Session Test
+    copy:
+      content: "<?php session_start(); echo session_status();"
+      dest: "{{ http_root }}/{{ domain }}/public/session_test.php"
+  roles:
+  - bbatsche.Nginx
+  tasks:
+  - include: "../../tasks/main.yml"
+  handlers:
+  - include: "../../handlers/main.yml"
+  - name: Restart FPM
+    service: name=php{{ php_version }}-fpm state=restarted
+    become: true
+  - name: Rehash Phpenv
+    phpenv:
+      command: rehash
+      php_version: "{{ php_version }}"
+      phpenv_root: "{{ phpenv_root }}"
+  - name: Update RC
+    command: update-rc.d php{{ php_version }}-fpm defaults
+    become: true
