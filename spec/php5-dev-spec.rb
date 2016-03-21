@@ -5,8 +5,6 @@ RSpec.configure do |config|
   config.before :suite do
     AnsibleHelper.instance.playbook("playbooks/php5-playbook.yml", {
       env_name: "dev",
-      xdebug_version: "2.3.3",
-      phpunit_version: "~5.2",
       copy_phpinfo: true,
       copy_index_php: true
     })
