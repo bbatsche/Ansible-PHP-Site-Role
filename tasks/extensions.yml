@@ -1,0 +1,39 @@
+---
+- name: Enable ZendOpcache
+  lineinfile:
+    dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/10-opcache.ini"
+    line: "zend_extension=opcache.so"
+    create: yes
+
+- name: Find Extension Directory
+  phpenv:
+    shell: php-config --extension-dir
+    phpenv_root: "{{ phpenv_root }}"
+    php_version: "{{ php_version }}"
+  changed_when: no
+  register: ext_dir
+
+- name: Install PECL Extensions
+  phpenv:
+    shell: yes '' | pecl install {{ item.name }}-{{ item.version }}
+    creates: "{{ ext_dir.stdout[:-1] }}/{{ item.name }}.so"
+    phpenv_root: "{{ phpenv_root }}"
+    php_version: "{{ php_version }}"
+  with_items: "{{ pecl_extensions }}"
+
+- name: Enable PECL Extensions
+  lineinfile:
+    dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/{{ item.weight | default(20) }}-{{ item.name }}.ini"
+    line: "extension={{ item.name }}.so"
+    create: yes
+  with_items: "{{ pecl_extensions }}"
+
+- name: Install Xdebug
+  phpenv:
+    shell: pecl install xdebug-{{ xdebug_version }}
+    creates: "{{ ext_dir.stdout[:-1] }}/xdebug.so"
+    phpenv_root: "{{ phpenv_root }}"
+    php_version: "{{ php_version }}"
+  when: env_name == "dev"
+
+# Xdebug is enabled by phpenv.sh profile script

@@ -1,2 +1,14 @@
 ---
-# handlers
+- name: Restart FPM
+  service: name=php{{ php_version }}-fpm state=restarted
+  become: yes
+
+- name: Rehash Phpenv
+  phpenv:
+    command: rehash
+    php_version: "{{ php_version }}"
+    phpenv_root: "{{ phpenv_root }}"
+
+- name: Update RC
+  command: update-rc.d php{{ php_version }}-fpm defaults
+  become: yes

@@ -1,2 +1,47 @@
 ---
-# defaults
+dynamic_php: no
+
+phpenv_version:  b003acc
+phpenv_composer_version: 1a6611d
+php_build_version: 876560b
+psysh_version: ~0.7
+
+copy_phpinfo: no
+copy_index_php: no
+
+disabled_php_functions:
+  - dl
+  - exec
+  - ignore_user_abort
+  - passthru
+  - pcntl_alarm
+  - pcntl_exec
+  - pcntl_fork
+  - pcntl_setpriority
+  - pcntl_signal
+  - pcntl_signal_dispatch
+  - pcntl_sigprocmask
+  - pcntl_sigtimedwait
+  - pcntl_sigwaitinfo
+  - posix_getgrgid
+  - posix_getgrnam
+  - posix_getpgid
+  - posix_getppid
+  - posix_getpwnam
+  - posix_getpwuid
+  - posix_getuid
+  - posix_kill
+  - posix_setegid
+  - posix_seteuid
+  - posix_setgid
+  - posix_setpgid
+  - posix_setrlimit
+  - posix_setsid
+  - posix_setuid
+  - proc_nice
+  - proc_open
+  - set_time_limit
+  - shell_exec
+  - source
+  - system
+  - virtual

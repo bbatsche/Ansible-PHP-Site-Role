@@ -1,0 +1,16 @@
+configure_option --enable-gd-native-ttf
+configure_option --enable-intl
+configure_option --enable-sysvmsg
+configure_option --with-bz2
+configure_option --with-freetype-dir /usr
+configure_option --with-gettext /usr
+configure_option --with-gmp
+configure_option --with-iconv
+configure_option --with-pdo-pgsql
+configure_option --with-pspell
+configure_option -D --without-pear
+configure_option --with-pear "{{ phpenv_root }}/versions/{{ php_version }}/pear"
+configure_option -D --with-tidy
+configure_option --without-tidy
+
+install_package "https://secure.php.net/distributions/php-{{ php_version }}.tar.bz2"

@@ -1,2 +1,117 @@
 ---
-# tasks
+- name: Install Build Dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - aspell
+    - aspell-en
+    - autoconf
+    - automake
+    - bison
+    - build-essential
+    - libtool
+    - libaspell-dev
+    - libbz2-dev
+    - libcurl4-openssl-dev
+    - libfreetype6-dev
+    - libgmp-dev
+    - libicu-dev
+    - libjpeg-dev
+    - libmagickcore-dev
+    - libmagickwand-dev
+    - libmcrypt-dev
+    - libmysqlclient-dev
+    - libpq-dev
+    - libpng12-dev
+    - libpspell-dev
+    - libreadline-dev
+    - librecode-dev
+    - libssl-dev
+    - libxml2-dev
+    - libxpm-dev
+    - libxslt1-dev
+    - libyaml-dev
+    - re2c
+  become: yes
+
+- name: Link gmp.h to a Usable Location
+  file:
+    src: /usr/include/x86_64-linux-gnu/gmp.h
+    dest: /usr/include/gmp.h
+    state: link
+  become: yes
+
+- name: Create Phpenv Directory
+  file:
+    path: "{{ phpenv_root }}"
+    state: directory
+    owner: "{{ ansible_ssh_user }}"
+  become: yes
+
+- name: Install Phpenv
+  git:
+    repo: https://github.com/madumlao/phpenv.git
+    dest: "{{ phpenv_root }}"
+    version: "{{ phpenv_version }}"
+    accept_hostkey: yes
+    update: no
+
+- name: Make Plugins Directory
+  file:
+    name: "{{ phpenv_root }}/plugins"
+    state: directory
+
+- name: Install PHP-Build Plugin
+  git:
+    repo: https://github.com/php-build/php-build.git
+    dest: "{{ phpenv_root }}/plugins/php-build"
+    version: "{{ php_build_version }}"
+    update: no
+
+- name: Install Phpenv Composer Plugin
+  git:
+    repo: https://github.com/ryoakg/phpenv-composer.git
+    dest: "{{ phpenv_root }}/plugins/phpenv-composer"
+    version: "{{ phpenv_composer_version }}"
+    update: no
+  notify: Rehash Phpenv
+
+- name: Add Phpenv to Profile
+  template: src=phpenv.sh.j2 dest=/etc/profile.d/phpenv.sh mode=755
+  become: yes
+
+- name: Copy Phpenv Definition
+  template: src=phpenv_definition.j2 dest=/tmp/{{ php_version }}
+
+- name: Install
+  phpenv:
+    arguments: /tmp/{{ php_version }}
+    php_version: "{{ php_version }}"
+    phpenv_root: "{{ phpenv_root }}"
+  notify: Rehash Phpenv
+
+- name: Copy php.ini
+  template:
+    src: php.ini.j2
+    dest: "{{ phpenv_root}}/versions/{{ php_version }}/etc/php.ini"
+  notify: Restart FPM
+
+- name: Create Session Directory
+  file:
+    name: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
+    state: directory
+    mode: 0750
+    owner: www-data
+    group: adm
+  become: yes
+
+- include: extensions.yml
+- include: fpm.yml
+- include: composer.yml
+
+- name: Copy phpinfo.php
+  copy: src=phpinfo.php dest={{ http_root }}/{{ domain }}/public/phpinfo.php
+  when: copy_phpinfo and env_name == "dev"
+
+- name: Copy index.php
+  template: src=index.php.j2 dest={{ http_root }}/{{ domain }}/public/index.php
+  when: copy_index_php

@@ -1,0 +1,55 @@
+---
+- name: Copy Upstart Config
+  template: src=fpm-upstart.conf.j2 dest=/etc/init/php{{ php_version }}-fpm.conf
+  become: yes
+  notify: Update RC
+
+- name: Copy Init Script
+  template: src=fpm-init.sh.j2 dest=/etc/init.d/php{{ php_version }}-fpm mode=0755
+  become: yes
+  notify: Update RC
+
+- name: Delete Default FPM Config
+  file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf.default state=absent
+  notify: Restart FPM
+
+- name: Copy FPM Config
+  template: src=fpm.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf
+  notify: Restart FPM
+
+- name: Create Pool Directory
+  file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d state=directory
+
+- name: Create FPM Error Log
+  command: touch {{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log
+  args:
+    creates: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
+
+- name: Create Domain Slow Log Log
+  command: touch {{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log
+  args:
+    creates: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log"
+
+- name: Set FPM Error Log Permissions
+  file:
+    name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
+    state: file
+    mode: 0664
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+  become: yes
+
+- name: Set Domain Slow Log Permissions
+  file:
+    name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log"
+    state: file
+    mode: 0664
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+  become: yes
+  when: domain | default("") != ""
+
+- name: Copy FPM Pool Config
+  template: src=fpm-pool.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/{{ domain }}.conf
+  when: domain | default("") != ""
+  notify: Restart FPM
