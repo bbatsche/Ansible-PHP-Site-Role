@@ -1,0 +1,47 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: yes
+
+  tasks:
+  - name: Create Swap File
+    command: fallocate -l 1G /swap
+    when: ansible_swaptotal_mb < 1023
+
+  - name: Secure Swap File
+    file: name=/swap owner=root group=root mode=0600
+
+  - name: Make Swap
+    command: mkswap /swap
+    when: ansible_swaptotal_mb < 1023
+    notify: Turn on Swap
+
+  - name: Add Swap to Fstab
+    lineinfile:
+      dest:   /etc/fstab
+      regexp: "swap"
+      line:   "/swap none swap sw 0 0"
+      state:  present
+
+  - name: Always Expand Bash Aliases
+    copy:
+      content: shopt -s expand_aliases;
+      dest: /etc/profile.d/alias.sh
+
+  - name: Install Git
+    apt: package=git state=present
+    become: yes
+
+  - name: Accept All Environment Variables from SSH
+    lineinfile:
+      line: AcceptEnv *
+      regexp: ^AcceptEnv
+      dest: /etc/ssh/sshd_config
+      validate: /usr/sbin/sshd -t -f %s
+    notify: Restart SSH
+
+  handlers:
+  - name: Turn on Swap
+    command: swapon -ae
+  - name: Restart SSH
+    service: name=ssh state=restarted
