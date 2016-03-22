@@ -1,11 +1,31 @@
 ---
 - hosts: all
   remote_user: root
-  become: yes
-
+  become: true
   vars_files:
-    - defaults/main.yml
+  - defaults/main.yml
+  - vars/main.yml
+  vars:
+    domain: phpenv-test.dev
+    xdebug_version: 2.4.0
+    phpunit_version: "~5.2"
+    pecl_extensions:
+    - name: imagick
+      version: 3.4.1
+  roles:
+  - { role: bbatsche.Nginx, site_type: php }
   tasks:
-    - include: tasks/main.yml
+  - include: tasks/main.yml
   handlers:
-    - include: handlers/main.yml
+  - include: handlers/main.yml
+  - name: Restart FPM
+    service: name=php{{ php_version }}-fpm state=restarted
+    become: true
+  - name: Rehash Phpenv
+    phpenv:
+      command: rehash
+      php_version: "{{ php_version }}"
+      phpenv_root: "{{ phpenv_root }}"
+  - name: Update RC
+    command: update-rc.d php{{ php_version }}-fpm defaults
+    become: true

@@ -5,14 +5,17 @@ dist: trusty
 language: generic
 
 env:
-  - ANSIBLE_VERSION="1.9"
-  - ANSIBLE_VERSION="2.0"
+  - ANSIBLE_VERSION="1.9" PHP_VERSION="5.6.19"
+  - ANSIBLE_VERSION="2.0" PHP_VERSION="5.6.19"
+  - ANSIBLE_VERSION="1.9" PHP_VERSION="7.0.3"
+  - ANSIBLE_VERSION="2.0" PHP_VERSION="7.0.3"
 
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-apt python-pycurl
 install:
   - sudo pip install "ansible~=$ANSIBLE_VERSION"
+  - sudo ansible-galaxy install bbatsche.Nginx
 script:
   - echo localhost > inventory
 
@@ -20,11 +23,11 @@ script:
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - ansible-playbook -i inventory travis-playbook.yml --connection=local
+  - ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
 
   # Idempotence test
   - >
-    ansible-playbook -i inventory travis-playbook.yml --connection=local
+    ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
