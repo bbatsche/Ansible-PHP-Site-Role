@@ -20,34 +20,34 @@
 - name: Create Pool Directory
   file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d state=directory
 
-- name: Create FPM Error Log
-  command: touch {{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log
-  args:
-    creates: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
+- name: Check for FPM Error Log
+  stat: path={{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log
+  register: fpm_error_log
 
-- name: Create Domain Slow Log Log
-  command: touch {{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log
-  args:
-    creates: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log"
+- name: Check for Domain Slow Log
+  stat: path={{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log
+  when: domain | default("") != ""
+  register: fpm_slow_log
 
-- name: Set FPM Error Log Permissions
+- name: Create FPM Error Log Permissions
   file:
     name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
-    state: file
+    state: touch
     mode: 0664
     owner: "{{ ansible_ssh_user }}"
     group: www-data
   become: yes
+  when: fpm_error_log.stat.exists == false
 
-- name: Set Domain Slow Log Permissions
+- name: Create Domain Slow Log Permissions
   file:
     name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log"
-    state: file
+    state: touch
     mode: 0664
     owner: "{{ ansible_ssh_user }}"
     group: www-data
   become: yes
-  when: domain | default("") != ""
+  when: domain | default("") != "" and fpm_slow_log.stat.exists == false
 
 - name: Copy FPM Pool Config
   template: src=fpm-pool.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/{{ domain }}.conf
