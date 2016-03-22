@@ -1,22 +1,44 @@
-Role Name
-=========
+Ansible Phpenv Site Role
+========================
 
-A brief description of the role goes here.
+[![Build Status](https://travis-ci.org/bbatsche/Ansible-Phpenv-Site-Role.svg?branch=master)](https://travis-ci.org/bbatsche/Ansible-Phpenv-Site-Role)
+
+This Ansible role will install a given version of PHP on your server and set up a site in Nginx running PHP. The role uses [Phpenv](https://github.com/madumlao/phpenv) to manage the different versions of PHP. It should be able to install any version of PHP from 5.2 through 7.0 (although if you're installing PHP 5.2, you may need to seriously rethink your life choices ;-).
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Phpenv requires Git to be installed on your server, but then what server doesn't have Git these days?
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+- `domain` &mdash; Site domain to be created
+- `dynamic_php` &mdash; Whether or not Nginx should rewrite all requests on your site through `index.php`. This is used for most modern frameworks. Default is no
+- `max_upload_size` &mdash; Maximum upload size in MB. Default is "10"
+- `php_version` &mdash; Version of PHP to install
+- `pecl_extensions` &mdash; A list of additional extension to install from [PECL](https://pecl.php.net/). Each value should have a `name` and a `version`
+- `phpenv_version` &mdash; Version of [Phpenv](https://github.com/madumlao/phpenv) to install. Default is a Git SHA: "b003acc"
+- `phpenv_composer_version` &mdash; Version of [Phpenv Composer Plugin](https://github.com/ryoakg/phpenv-composer) to install. Default is a Git SHA: "1a6611d"
+- `phpenv_build_version` &mdash; Version of [PHP Build](https://github.com/php-build/php-build) to install. Default is a Git SHA: "876560b"
+- `xdebug_version` &mdash; Version of [Xdebug](https://xdebug.org/) to install
+- `phpunit_version` &mdash; Version of [PHPUnit](https://phpunit.de/) to install with Composer
+- `psysh_version` &mdash; Version of [PsySH](http://psysh.org/) to install with Composer. Default is "~0.7"
+- `copy_phpinfo` &mdash; Whether to copy a `phpinfo()` page to the new site. Default is no
+- `copy_index_php` &mdash; Whether to copy a `index.php` stub file to the new site. Default is no
+- `disabled_function` &mdash; A list of functions to disable when PHP is running from the web. The default value blocks functions that could be used to execute shell code or manipulate other processes on the server.
+- `http_root` &mdash; Directory all sites will be created under. Default is "/srv/http"
+- `phpenv_root` &mdash; Where to install Phpenv and its support files. Default is "/usr/local/phpenv"
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role depends on bbatsche.Nginx. You must install that role first using:
+
+```bash
+ansible-galaxy install bbatsche.Nginx
+```
 
 Example Playbook
 ----------------
@@ -26,7 +48,16 @@ Including an example of how to use your role (for instance, with variables passe
 ```yml
 - hosts: servers
   roles:
-     - { role: bbatsche.rolename, x: 42 }
+  - role: bbatsche.Phpenv
+    domain: my-php-site.dev
+    php_version: 5.6.19
+    xdebug_version: 2.4.0
+    phpunit_version: ~5.2
+    pecl_extensions:
+    - name: yaml
+      version: 1.2.0
+    - name: imagick
+      version: 3.4.0
 ```
 
 License
@@ -61,8 +92,3 @@ There are several rake tasks for interacting with the test environment, includin
 - `rake vagrant[cmd]` &mdash; Run some arbitrary Vagrant command in the test environment. For example, to log in to the test environment run: `rake vagrant[ssh]`
 
 These specs are **not** meant to test for idempotence. They are meant to check that the specified tasks perform their expected steps. Idempotency can be tested independently as a form of integration testing.
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
