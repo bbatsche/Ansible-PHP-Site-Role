@@ -20,4 +20,4 @@ galaxy_info:
     - php-fpm
     - composer
 dependencies:
-  - { role: Nginx, site_type: php }
+  - { role: bbatsche.Nginx, site_type: php }
