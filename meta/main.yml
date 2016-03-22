@@ -17,7 +17,7 @@ galaxy_info:
     - pecl
     - psysh
     - xdebug
-    - php-fpm
+    - fpm
     - composer
 dependencies:
   - { role: bbatsche.Nginx, site_type: php }
