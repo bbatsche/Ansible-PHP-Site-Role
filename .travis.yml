@@ -23,7 +23,7 @@ script:
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
+  - travis_wait ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
 
   # Idempotence test
   - >
