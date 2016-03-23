@@ -1358,7 +1358,7 @@ session.save_path = {{ phpenv_root }}/versions/{{ php_version}}/var/run/session
 ; applications from session fixation via session adoption vulnerability. It is
 ; disabled by default for maximum compatibility, but enabling it is encouraged.
 ; https://wiki.php.net/rfc/strict_sessions
-session.use_strict_mode = 0
+session.use_strict_mode = 1
 
 ; Whether to use cookies.
 ; http://php.net/session.use-cookies
@@ -1431,7 +1431,7 @@ session.gc_divisor = 1000
 ; After this number of seconds, stored data will be seen as 'garbage' and
 ; cleaned up by the garbage collection process.
 ; http://php.net/session.gc-maxlifetime
-session.gc_maxlifetime = 1440
+session.gc_maxlifetime = 3600
 
 ; NOTE: If you are using the subdirectory option for storing session files
 ;       (see session.save_path above), then garbage collection does *not*
