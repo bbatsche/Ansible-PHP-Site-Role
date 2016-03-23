@@ -384,7 +384,7 @@ env[HOSTNAME] = $HOSTNAME
 env[TMP] = /tmp
 env[TMPDIR] = /tmp
 env[TEMP] = /tmp
-{% if env_name == "dev" %}env[LARAVEL_ENV] = local{% endif %}
+env[ENV_NAME] = {{ env_name }}
 
 ; Additional php.ini defines, specific to this pool of workers. These settings
 ; overwrite the values previously defined in the php.ini. The directives are the

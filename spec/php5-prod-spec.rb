@@ -12,6 +12,7 @@ RSpec.configure do |config|
     set :env, :PHPENV_VERSION => "5.6.18"
   end
 end
+
 describe "Phpenv is installed and working" do
   include_examples "phpenv"
 end
@@ -36,6 +37,10 @@ end
 describe command("php -i") do
   it "does not have XDebug installed" do
     expect(subject.stdout).to_not match /^xdebug support/
+  end
+
+  it "has the environment name set" do
+    expect(subject.stdout).to match /_SERVER\["ENV_NAME"\] => prod/
   end
 end
 
@@ -68,6 +73,10 @@ end
 describe command("curl phpenv-test.dev/phpinfo.php") do
   it "does not have XDebug enabled" do
     expect(subject.stdout).to_not match /xdebug support/
+  end
+
+  it "has the environment name set" do
+    expect(subject.stdout).to match /_SERVER\["ENV_NAME"\]<\/td><td.+>prod/
   end
 end
 

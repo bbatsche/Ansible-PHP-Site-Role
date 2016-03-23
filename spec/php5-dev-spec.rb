@@ -94,6 +94,10 @@ describe command("php -i") do
   it "has the default timezone set" do
     expect(subject.stdout).to match /^Default timezone => UTC/
   end
+
+  it "has the environment name set" do
+    expect(subject.stdout).to match /_SERVER\["ENV_NAME"\] => dev/
+  end
 end
 
 describe command("composer") do
@@ -133,6 +137,10 @@ end
 describe command("curl phpenv-test.dev/phpinfo.php") do
   it "has XDebug enabled" do
     expect(subject.stdout).to match /<th>xdebug support<\/th><th>enabled<\/th>/
+  end
+
+  it "has the environment name set" do
+    expect(subject.stdout).to match /_SERVER\["ENV_NAME"\]<\/td><td.+>dev/
   end
 end
 

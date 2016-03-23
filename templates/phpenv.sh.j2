@@ -1,6 +1,8 @@
 export PHPENV_ROOT={{ phpenv_root }}
 export PATH="$PHPENV_ROOT/bin:$PATH"
 
+export ENV_NAME={{ env_name }}
+
 eval "$(phpenv init -)"
 
 {% if env_name == "dev" %}
