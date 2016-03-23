@@ -4,7 +4,6 @@
   - "../../defaults/main.yml"
   - "../../vars/main.yml"
   vars:
-    site_type: php
     domain: phpenv-test.dev
     php_version: 5.6.18
     xdebug_version: 2.3.3
@@ -23,6 +22,7 @@
     - composer.json
     - composer.lock
     - vendor
+  post_tasks:
   - name: Create Disabled Function Test
     copy:
       content: "<?php shell_exec('pwd');"
@@ -36,7 +36,8 @@
       content: "<?php session_start(); echo session_status();"
       dest: "{{ http_root }}/{{ domain }}/public/session_test.php"
   roles:
-  - bbatsche.Nginx
+  - role: bbatsche.Nginx
+    site_type: php
   tasks:
   - include: "../../tasks/main.yml"
   handlers:
