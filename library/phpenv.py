@@ -80,7 +80,7 @@ class Phpenv(object):
             path_prefix      = self.phpenv_bin
         )
 
-        self.module.exit_json(changed=True, rc=rc, stdout=out, stderr=err)
+        self.module.exit_json(changed=True, rc=rc, stdout=out.strip(), stderr=err.strip())
 
     def skip(self, msg):
         self.module.exit_json(
