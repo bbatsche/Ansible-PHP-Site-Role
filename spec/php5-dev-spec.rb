@@ -162,6 +162,12 @@ describe command("curl phpenv-test.dev/session_test.php") do
   end
 end
 
+describe command("curl -I phpenv-test.dev/some-url") do
+  it 'does not redirect to index.php' do
+    expect(subject.stdout).to match /^HTTP\/1\.1 404 Not Found$/
+  end
+end
+
 describe "Nginx config is valid" do
   include_examples "nginx::config"
 end
