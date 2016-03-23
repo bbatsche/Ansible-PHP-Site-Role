@@ -92,7 +92,7 @@ describe command("php -i") do
   end
 
   it "has the default timezone set" do
-    expect(subject.stdout).to match /^Default timezone => UTC/
+    expect(subject.stdout).to match /^Default timezone => Etc\/UTC/
   end
 
   it "has the max upload size set" do

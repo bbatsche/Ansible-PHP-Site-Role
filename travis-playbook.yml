@@ -13,7 +13,8 @@
     - name: imagick
       version: 3.4.1
   roles:
-  - { role: bbatsche.Nginx, site_type: php }
+  - role: bbatsche.Nginx
+    site_type: php
   tasks:
   - include: tasks/main.yml
   handlers:
