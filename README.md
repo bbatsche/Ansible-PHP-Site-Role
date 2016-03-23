@@ -16,6 +16,7 @@ Role Variables
 - `domain` &mdash; Site domain to be created
 - `dynamic_php` &mdash; Whether or not Nginx should rewrite all requests on your site through `index.php`. This is used for most modern frameworks. Default is no
 - `max_upload_size` &mdash; Maximum upload size in MB. Default is "10"
+- `timezone` &mdash; Timezone that should be configured in PHP. Default is "Etc/UTC"
 - `php_version` &mdash; Version of PHP to install
 - `pecl_extensions` &mdash; A list of additional extension to install from [PECL](https://pecl.php.net/). Each value should have a `name` and a `version`
 - `phpenv_version` &mdash; Version of [Phpenv](https://github.com/madumlao/phpenv) to install. Default is a Git SHA: "b003acc"
@@ -25,11 +26,10 @@ Role Variables
 - `phpunit_version` &mdash; Version of [PHPUnit](https://phpunit.de/) to install with Composer
 - `psysh_version` &mdash; Version of [PsySH](http://psysh.org/) to install with Composer. Default is "~0.7"
 - `copy_phpinfo` &mdash; Whether to copy a `phpinfo()` page to the new site. Default is no
-- `copy_index_php` &mdash; Whether to copy a `index.php` stub file to the new site. Default is no
+- `copy_index_php` &mdash; Whether to copy an `index.php` stub file to the new site. Default is no
 - `disabled_function` &mdash; A list of functions to disable when PHP is running from the web. The default value blocks functions that could be used to execute shell code or manipulate other processes on the server.
 - `http_root` &mdash; Directory all sites will be created under. Default is "/srv/http"
 - `phpenv_root` &mdash; Where to install Phpenv and its support files. Default is "/usr/local/phpenv"
-
 
 Dependencies
 ------------
@@ -42,8 +42,6 @@ ansible-galaxy install bbatsche.Nginx
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```yml
 - hosts: servers
