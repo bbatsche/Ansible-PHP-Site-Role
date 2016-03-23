@@ -95,6 +95,10 @@ describe command("php -i") do
     expect(subject.stdout).to match /^Default timezone => UTC/
   end
 
+  it "has the max upload size set" do
+    expect(subject.stdout).to match /upload_max_filesize => 10M/
+  end
+
   it "has the environment name set" do
     expect(subject.stdout).to match /_SERVER\["ENV_NAME"\] => dev/
   end
