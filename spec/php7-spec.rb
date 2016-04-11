@@ -55,7 +55,7 @@ end
 
 describe command("phpunit --version") do
   it "is installed" do
-    expect(subject.stdout).to match /^PHPUnit 5\.2\.\d+/
+    expect(subject.stdout).to match /^PHPUnit 5\.3\.\d+/
   end
 end
 

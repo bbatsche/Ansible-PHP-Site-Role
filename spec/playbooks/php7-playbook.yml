@@ -7,7 +7,7 @@
     domain: phpenv-test.dev
     php_version: 7.0.3
     xdebug_version: 2.4.0
-    phpunit_version: "~5.2"
+    phpunit_version: 5.3.*
     pecl_extensions:
     - name: yaml
       version: 2.0.0RC7
