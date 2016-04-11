@@ -104,6 +104,14 @@ describe command("php -i") do
   end
 end
 
+describe command("pear config-show") do
+  it "has temp directories set correctly" do
+    expect(subject.stdout).to match /cache_dir\s+\/tmp\/phpenv\/5\.6\.18\/pear\/cache$/
+    expect(subject.stdout).to match /download_dir\s+\/tmp\/phpenv\/5\.6\.18\/pear\/download$/
+    expect(subject.stdout).to match /temp_dir\s+\/tmp\/phpenv\/5\.6\.18\/pear$/
+  end
+end
+
 describe command("composer") do
   it "does not have XDebug enabled" do
     expect(subject.stderr).to_not match /You are running composer with xdebug enabled/

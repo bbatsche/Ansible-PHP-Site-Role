@@ -5,6 +5,23 @@
     line: "zend_extension=opcache.so"
     create: yes
 
+- name: Locate Pear Directories
+  phpenv:
+    shell: pear config-get {{ item.key }}
+    phpenv_root: "{{ phpenv_root }}"
+    php_version: "{{ php_version }}"
+  changed_when: no
+  register: current_pear_dir
+  with_dict: "{{ pear_dirs }}"
+
+- name: Set Pear Directories
+  phpenv:
+    shell: pear config-set {{ item.item.key }} {{ pear_dirs[item.item.key] }} system
+    phpenv_root: "{{ phpenv_root }}"
+    php_version: "{{ php_version }}"
+  when: pear_dirs[item.item.key] != item.stdout
+  with_items: "{{ current_pear_dir.results }}"
+
 - name: Find Extension Directory
   phpenv:
     shell: php-config --extension-dir
