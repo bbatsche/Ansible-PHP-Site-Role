@@ -52,7 +52,7 @@
     name: "{{ phpenv_root }}"
     etype: group
     entity: web-admin
-    permissions: rwX
+    permissions: rwx
     state: present
   become: yes
 
@@ -61,7 +61,7 @@
     name: "{{ phpenv_root }}"
     etype: group
     entity: web-admin
-    permissions: rwX
+    permissions: rwx
     default: yes
     state: present
   become: yes
@@ -70,7 +70,7 @@
   acl:
     name: "{{ phpenv_root }}"
     etype: mask
-    permissions: rwX
+    permissions: rwx
     default: yes
     state: present
   become: yes
