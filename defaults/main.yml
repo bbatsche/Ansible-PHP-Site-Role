@@ -1,9 +1,9 @@
 ---
 dynamic_php: no
 
-phpenv_version:  b003acc
+phpenv_version: "0852611"
 phpenv_composer_version: 1a6611d
-php_build_version: 876560b
+php_build_version: 0bac8bb
 psysh_version: ~0.7
 
 copy_phpinfo: no

@@ -9,7 +9,7 @@ RSpec.configure do |config|
       copy_index_php: true
     })
 
-    set :env, :PHPENV_VERSION => "5.6.18"
+    set :env, :PHPENV_VERSION => "5.6.21"
   end
 end
 
@@ -24,7 +24,7 @@ describe command("php --version") do
   end
 
   it "is the correct version" do
-    expect(subject.stdout).to match /^PHP 5\.6\.18/
+    expect(subject.stdout).to match /^PHP 5\.6\.21/
   end
 
   it "has OPcache enabled" do
@@ -106,9 +106,9 @@ end
 
 describe command("pear config-show") do
   it "has temp directories set correctly" do
-    expect(subject.stdout).to match /cache_dir\s+\/tmp\/phpenv\/5\.6\.18\/pear\/cache$/
-    expect(subject.stdout).to match /download_dir\s+\/tmp\/phpenv\/5\.6\.18\/pear\/download$/
-    expect(subject.stdout).to match /temp_dir\s+\/tmp\/phpenv\/5\.6\.18\/pear$/
+    expect(subject.stdout).to match /cache_dir\s+\/tmp\/phpenv\/5\.6\.21\/pear\/cache$/
+    expect(subject.stdout).to match /download_dir\s+\/tmp\/phpenv\/5\.6\.21\/pear\/download$/
+    expect(subject.stdout).to match /temp_dir\s+\/tmp\/phpenv\/5\.6\.21\/pear$/
   end
 end
 
@@ -142,7 +142,7 @@ describe command("curl -i phpenv-test.dev") do
   end
 
   it "executes PHP code" do
-    expect(subject.stdout).to match /Nginx is serving PHP 5\.6\.18 code on phpenv-test\.dev/
+    expect(subject.stdout).to match /Nginx is serving PHP 5\.6\.21 code on phpenv-test\.dev/
   end
 end
 

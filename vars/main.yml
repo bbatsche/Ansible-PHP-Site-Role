@@ -5,4 +5,3 @@ pear_dirs:
   cache_dir:    /tmp/phpenv/{{ php_version }}/pear/cache
   download_dir: /tmp/phpenv/{{ php_version }}/pear/download
   temp_dir:     /tmp/phpenv/{{ php_version }}/pear
-

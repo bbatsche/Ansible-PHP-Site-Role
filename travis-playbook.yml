@@ -11,7 +11,7 @@
     phpunit_version: "~5.2"
     pecl_extensions:
     - name: imagick
-      version: 3.4.1
+      version: 3.4.2
   roles:
   - role: bbatsche.Base
   - role: bbatsche.Nginx

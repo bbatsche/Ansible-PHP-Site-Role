@@ -5,14 +5,14 @@
   - "../../vars/main.yml"
   vars:
     domain: phpenv-test.dev
-    php_version: 7.0.3
+    php_version: 7.0.6
     xdebug_version: 2.4.0
     phpunit_version: 5.3.*
     pecl_extensions:
     - name: yaml
       version: 2.0.0RC7
     - name: imagick
-      version: 3.4.0
+      version: 3.4.2
   roles:
   - role: bbatsche.Nginx
     site_type: php

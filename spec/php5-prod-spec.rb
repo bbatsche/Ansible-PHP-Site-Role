@@ -9,7 +9,7 @@ RSpec.configure do |config|
       copy_index_php: true
     })
 
-    set :env, :PHPENV_VERSION => "5.6.18"
+    set :env, :PHPENV_VERSION => "5.6.21"
   end
 end
 
@@ -24,7 +24,7 @@ describe command("php --version") do
   end
 
   it "is the correct version" do
-    expect(subject.stdout).to match /^PHP 5\.6\.18/
+    expect(subject.stdout).to match /^PHP 5\.6\.21/
   end
 end
 
@@ -66,7 +66,7 @@ describe command("curl -i phpenv-test.dev") do
   end
 
   it "executes PHP code" do
-    expect(subject.stdout).to match /Nginx is serving PHP 5\.6\.18 code on phpenv-test\.dev/
+    expect(subject.stdout).to match /Nginx is serving PHP 5\.6\.21 code on phpenv-test\.dev/
   end
 end
 

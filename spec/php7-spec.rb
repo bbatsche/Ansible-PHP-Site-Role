@@ -5,15 +5,10 @@ RSpec.configure do |config|
   config.before :suite do
     AnsibleHelper.instance.playbook "playbooks/php7-playbook.yml", copy_phpinfo: true, copy_index_php: true
 
-    set :env, :PHPENV_VERSION => "7.0.3"
+    set :env, :PHPENV_VERSION => "7.0.6"
   end
 end
 
-# phpenv should be working
-# php 7 should be working
-# yaml should be working
-# imagick should be working
-# phpunit should be working
 describe "Phpenv is installed and working" do
   include_examples "phpenv"
 end
@@ -25,7 +20,7 @@ describe command("php --version") do
   end
 
   it "is the correct version" do
-    expect(subject.stdout).to match /^PHP 7\.0\.3/
+    expect(subject.stdout).to match /^PHP 7\.0\.6/
   end
 
   it "has OPcache enabled" do
@@ -77,7 +72,7 @@ describe command("curl -i phpenv-test.dev") do
   end
 
   it "executes PHP code" do
-    expect(subject.stdout).to match /Nginx is serving PHP 7\.0\.3 code on phpenv-test\.dev/
+    expect(subject.stdout).to match /Nginx is serving PHP 7\.0\.6 code on phpenv-test\.dev/
   end
 end
 

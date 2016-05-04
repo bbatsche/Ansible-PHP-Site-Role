@@ -5,7 +5,7 @@ RSpec.configure do |config|
   config.before :suite do
     AnsibleHelper.instance.playbook "playbooks/php5-playbook.yml", copy_index_php: true, dynamic_php: true
 
-    set :env, :PHPENV_VERSION => "5.6.18"
+    set :env, :PHPENV_VERSION => "5.6.21"
   end
 end
 
@@ -15,7 +15,7 @@ end
 
 describe command("curl phpenv-test.dev/some-url") do
   it "redirects to index.php" do
-    expect(subject.stdout).to match /Nginx is serving PHP 5\.6\.18 code on phpenv-test\.dev/
+    expect(subject.stdout).to match /Nginx is serving PHP 5\.6\.21 code on phpenv-test\.dev/
   end
 end
 

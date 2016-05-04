@@ -5,8 +5,8 @@
   - "../../vars/main.yml"
   vars:
     domain: phpenv-test.dev
-    php_version: 5.6.18
-    xdebug_version: 2.3.3
+    php_version: 5.6.21
+    xdebug_version: 2.4.0
     phpunit_version: 5.3.*
     pecl_extensions:
     - name: yaml
@@ -14,7 +14,7 @@
     - name: redis
       version: 2.2.7
     - name: imagick
-      version: 3.4.0
+      version: 3.4.2
   pre_tasks:
   - name: Delete previous composer packages
     file: path={{ phpenv_root }}/versions/{{ php_version }}/composer/{{ item }} state=absent
