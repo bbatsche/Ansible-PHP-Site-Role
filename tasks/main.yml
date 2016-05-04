@@ -44,7 +44,35 @@
   file:
     path: "{{ phpenv_root }}"
     state: directory
-    owner: "{{ ansible_ssh_user }}"
+    mode: 0775
+  become: yes
+
+- name: Allow Web Admins to Write Phpenv Directory
+  acl:
+    name: "{{ phpenv_root }}"
+    etype: group
+    entity: web-admin
+    permissions: rwX
+    state: present
+  become: yes
+
+- name: Allow Web Admins Write to Future Directories in Phpenv
+  acl:
+    name: "{{ phpenv_root }}"
+    etype: group
+    entity: web-admin
+    permissions: rwX
+    default: yes
+    state: present
+  become: yes
+
+- name: Set ACL Mask of Future Directories in Phpenv
+  acl:
+    name: "{{ phpenv_root }}"
+    etype: mask
+    permissions: rwX
+    default: yes
+    state: present
   become: yes
 
 - name: Install Phpenv
@@ -76,7 +104,7 @@
   notify: Rehash Phpenv
 
 - name: Add Phpenv to Profile
-  template: src=phpenv.sh.j2 dest=/etc/profile.d/phpenv.sh mode=755
+  template: src=phpenv.sh.j2 dest=/etc/profile.d/phpenv.sh mode=0755
   become: yes
 
 - name: Copy Phpenv Definition
@@ -99,9 +127,9 @@
   file:
     name: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
     state: directory
-    mode: 0750
+    mode: 0770
     owner: www-data
-    group: adm
+    group: www-data
   become: yes
 
 - include: extensions.yml
