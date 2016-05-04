@@ -10,6 +10,8 @@ Requirements
 
 Phpenv requires Git to be installed on your server, but then what server doesn't have Git these days?
 
+This role takes advantage of Linux filesystem ACLs and a group called "web-admin" for granting access to particular directories. You can either configure those steps manually or install the [`bbatsche.Base`](https://galaxy.ansible.com/bbatsche/Base/) role.
+
 Role Variables
 --------------
 
