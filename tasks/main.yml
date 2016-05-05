@@ -44,7 +44,9 @@
   file:
     path: "{{ phpenv_root }}"
     state: directory
-    mode: 0775
+    owner: root
+    group: web-admin
+    mode: 02775
   become: yes
 
 - name: Allow Web Admins to Write Phpenv Directory
