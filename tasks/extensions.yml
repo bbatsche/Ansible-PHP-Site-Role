@@ -36,14 +36,14 @@
     creates: "{{ ext_dir.stdout }}/{{ item.name }}.so"
     phpenv_root: "{{ phpenv_root }}"
     php_version: "{{ php_version }}"
-  with_items: "{{ pecl_extensions }}"
+  with_items: "{{ pecl_extensions | default([]) }}"
 
 - name: Enable PECL Extensions
   lineinfile:
     dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/{{ item.weight | default(20) }}-{{ item.name }}.ini"
     line: "extension={{ item.name }}.so"
     create: yes
-  with_items: "{{ pecl_extensions }}"
+  with_items: "{{ pecl_extensions | default([]) }}"
 
 - name: Install Xdebug
   phpenv:
