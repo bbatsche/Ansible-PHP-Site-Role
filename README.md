@@ -19,6 +19,7 @@ Role Variables
 - `dynamic_php` &mdash; Whether or not Nginx should rewrite all requests on your site through `index.php`. This is used for most modern frameworks. Default is no
 - `max_upload_size` &mdash; Maximum upload size in MB. Default is "10"
 - `timezone` &mdash; Timezone that should be configured in PHP. Default is "Etc/UTC"
+- `mysql_socket` &mdash; Path to default MySQL socket for use when connecting to localhost. Default is "/var/run/mysqld/mysqld.sock"
 - `php_version` &mdash; Version of PHP to install
 - `pecl_extensions` &mdash; A list of additional extension to install from [PECL](https://pecl.php.net/). Each value should have a `name` and a `version`
 - `phpenv_version` &mdash; Version of [Phpenv](https://github.com/madumlao/phpenv) to install. Default is a Git SHA: "b003acc"
