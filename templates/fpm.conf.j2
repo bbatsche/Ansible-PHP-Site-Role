@@ -27,7 +27,7 @@ pid = run/php-fpm.pid
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; in a local file.
-; Note: the default prefix is /usr/local/phpenv/versions/5.6.18/var
+; Note: the default prefix is {{ phpenv_root }}/versions/{{ php_version }}
 ; Default Value: log/php-fpm.log
 error_log = log/fpm-error.log
 
