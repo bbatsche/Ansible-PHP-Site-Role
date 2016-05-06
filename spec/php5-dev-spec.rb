@@ -174,6 +174,18 @@ describe command("curl phpenv-test.dev/session_test.php") do
   end
 end
 
+describe command("curl phpenv-test.dev/error_test.php") do
+  it "doesn't create any output" do
+    expect(subject.stdout).to eq ''
+  end
+end
+
+describe command("tail -n 1 /usr/local/phpenv/versions/5.6.21/var/log/error.log") do
+  it "logged an error" do
+    expect(subject.stdout).to match /Test error message$/
+  end
+end
+
 describe command("curl -I phpenv-test.dev/some-url") do
   it 'does not redirect to index.php' do
     expect(subject.stdout).to match /^HTTP\/1\.1 404 Not Found$/

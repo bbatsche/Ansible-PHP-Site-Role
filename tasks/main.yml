@@ -129,7 +129,16 @@
   file:
     name: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
     state: directory
-    mode: 0770
+    mode: 02770
+    owner: www-data
+    group: www-data
+  become: yes
+
+- name: Create Log Directory
+  file:
+    name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
+    state: directory
+    mode: 02770
     owner: www-data
     group: www-data
   become: yes

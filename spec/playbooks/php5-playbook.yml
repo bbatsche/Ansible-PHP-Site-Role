@@ -35,6 +35,10 @@
     copy:
       content: "<?php session_start(); echo session_status();"
       dest: "{{ http_root }}/{{ domain }}/public/session_test.php"
+  - name: Create Log Test
+    copy:
+      content: "<?php error_log('Test error message');"
+      dest: "{{ http_root }}/{{ domain }}/public/error_test.php"
   roles:
   - role: bbatsche.Nginx
     site_type: php
