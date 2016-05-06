@@ -44,22 +44,6 @@ describe command("php -i") do
   end
 end
 
-describe command("phpunit --version") do
-  it "is not installed" do
-    expect(subject.stderr).to match /phpunit: command not found/
-
-    expect(subject.exit_status).to_not eq 0
-  end
-end
-
-describe command("psysh --version") do
-  it "is not installed" do
-    expect(subject.stderr).to match /psysh: command not found/
-
-    expect(subject.exit_status).to_not eq 0
-  end
-end
-
 describe command("curl -i phpenv-test.dev") do
   it "sends a 200 OK response" do
     expect(subject.stdout).to match /^HTTP\/1\.1 200 OK$/
