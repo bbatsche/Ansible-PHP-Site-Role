@@ -22,12 +22,11 @@ Role Variables
 - `mysql_socket` &mdash; Path to default MySQL socket for use when connecting to localhost. Default is "/var/run/mysqld/mysqld.sock"
 - `php_version` &mdash; Version of PHP to install
 - `pecl_extensions` &mdash; A list of additional extension to install from [PECL](https://pecl.php.net/). Each value should have a `name` and a `version`
+- `composer_packages` &mdash; A list of composer packages to install. Each value should have a `name` and a `version` property.
 - `phpenv_version` &mdash; Version of [Phpenv](https://github.com/madumlao/phpenv) to install. Default is a Git SHA: "b003acc"
 - `phpenv_composer_version` &mdash; Version of [Phpenv Composer Plugin](https://github.com/ryoakg/phpenv-composer) to install. Default is a Git SHA: "1a6611d"
 - `phpenv_build_version` &mdash; Version of [PHP Build](https://github.com/php-build/php-build) to install. Default is a Git SHA: "876560b"
 - `xdebug_version` &mdash; Version of [Xdebug](https://xdebug.org/) to install
-- `phpunit_version` &mdash; Version of [PHPUnit](https://phpunit.de/) to install with Composer
-- `psysh_version` &mdash; Version of [PsySH](http://psysh.org/) to install with Composer. Default is "~0.7"
 - `copy_phpinfo` &mdash; Whether to copy a `phpinfo()` page to the new site. Default is no
 - `copy_index_php` &mdash; Whether to copy an `index.php` stub file to the new site. Default is no
 - `disabled_function` &mdash; A list of functions to disable when PHP is running from the web. The default value blocks functions that could be used to execute shell code or manipulate other processes on the server.
