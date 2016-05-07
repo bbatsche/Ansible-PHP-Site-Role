@@ -1,0 +1,45 @@
+---
+- name: Check for Composer
+  stat: path=/usr/local/bin/composer
+  register: composer_result
+
+- name: Download Composer Installer
+  get_url: url=https://getcomposer.org/installer dest=/tmp/install-composer.php
+  when: composer_result.stat.exists == false
+
+- name: Install Composer
+  command: >
+    php /tmp/install-composer.php --install-dir=/usr/local/bin --filename=composer
+    creates=/usr/local/bin/composer
+  become: yes
+
+- name: Add Composer's Bin to $PATH
+  lineinfile:
+    dest: "{{ ansible_user_dir }}/.profile"
+    line: 'export PATH="$PATH:$HOME/.composer/vendor/bin"'
+    state: present
+
+- name: Create Composer Directory
+  file: path={{ ansible_user_dir }}/.composer state=directory
+
+- block:
+  - name: Install PHPUnit
+    composer:
+      command: require
+      arguments: phpunit/phpunit={{ phpunit_version }}
+      working_dir: "{{ ansible_user_dir }}/.composer/"
+      prefer_dist: yes
+
+  - name: Install PsySH
+    composer:
+      command: require
+      arguments: psy/psysh={{ psysh_version }}
+      working_dir: "{{ ansible_user_dir }}/.composer/"
+      prefer_dist: yes
+
+  - name: Create PHPUnit Alias for Xdebug
+    lineinfile:
+      dest: "{{ ansible_user_dir }}/.profile"
+      line: alias phpunit='php $(which phpunit)'
+  when: env_name == "dev"
+
