@@ -39,7 +39,7 @@
       content: "<?php error_log('Test error message');"
       dest: "{{ http_root }}/{{ domain }}/public/error_test.php"
   tasks:
-  - include: "../../tasks/main.yml"
+  - include: "../../tasks/phpenv/main.yml"
   handlers:
   - include: "../../handlers/main.yml"
   - name: Restart FPM

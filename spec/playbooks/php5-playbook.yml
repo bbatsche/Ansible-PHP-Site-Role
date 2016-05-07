@@ -48,7 +48,7 @@
   - role: bbatsche.Nginx
     site_type: php
   tasks:
-  - include: "../../tasks/main.yml"
+  - include: "../../tasks/phpenv/main.yml"
   handlers:
   - include: "../../handlers/main.yml"
   - name: Restart FPM
