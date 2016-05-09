@@ -39,11 +39,11 @@
       content: "<?php error_log('Test error message');"
       dest: "{{ http_root }}/{{ domain }}/public/error_test.php"
   tasks:
-  - include: "../../tasks/phpenv/main.yml"
+  - include: "../../tasks/main.yml"
   handlers:
   - include: "../../handlers/main.yml"
   - name: Restart FPM
-    service: name=php{{ php_version }}-fpm state=restarted
+    service: name=php{{ php_version | default('5') }}-fpm state=restarted
     become: true
   - name: Rehash Phpenv
     phpenv:

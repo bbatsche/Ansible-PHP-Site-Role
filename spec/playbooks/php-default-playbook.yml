@@ -5,10 +5,10 @@
   - "../../vars/main.yml"
   vars:
     domain: phpenv-test.dev
-    php_version: 5.6.21
+    storage_dir: "../../storage"
     composer_packages:
     - name: phpunit/phpunit
-      version: 5.3.*
+      version: 4.8.*
     - name: phpspec/phpspec
       version: 2.5.*
     - name: psy/psysh
@@ -20,13 +20,6 @@
       version: 2.2.7
     - name: imagick
       version: 3.4.2
-  pre_tasks:
-  - name: Delete previous composer packages
-    file: path={{ phpenv_root }}/versions/{{ php_version }}/composer/{{ item }} state=absent
-    with_items:
-    - composer.json
-    - composer.lock
-    - vendor
   post_tasks:
   - name: Create Disabled Function Test
     copy:

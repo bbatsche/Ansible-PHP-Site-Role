@@ -21,7 +21,7 @@
   handlers:
   - include: handlers/main.yml
   - name: Restart FPM
-    service: name=php{{ php_version }}-fpm state=restarted
+    service: name=php{{ php_version | default('5') }}-fpm state=restarted
     become: true
   - name: Rehash Phpenv
     phpenv:

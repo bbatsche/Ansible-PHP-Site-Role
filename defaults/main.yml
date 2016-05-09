@@ -7,6 +7,8 @@ php_build_version: 0bac8bb
 
 xdebug_version: 2.4.0
 
+enable_suhosin: no
+
 copy_phpinfo: no
 copy_index_php: no
 

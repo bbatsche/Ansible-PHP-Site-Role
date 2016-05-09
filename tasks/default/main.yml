@@ -32,33 +32,28 @@
   file: path=/etc/php5/cli/conf.d/20-xdebug.ini state=absent
   become: yes
 
-- name: Create PHP Alias for Xdebug
-  lineinfile:
-    dest: "{{ ansible_user_dir }}/.profile"
-    line: alias php='php -dzend_extension=xdebug.so'
-  when: env_name == "dev"
-
 - name: Find Extension Directory
   command: php-config --extension-dir
   changed_when: no
   register: ext_dir
 
-- name: Install YAML Extension
-  shell: yes '' | pecl install yaml-{{ php_yaml_version }}
+- name: Install PECL Extensions
+  shell: yes '' | pecl install {{ item.name }}-{{ item.version }}
   args:
-    creates: "{{ ext_dir.stdout }}/yaml.so"
+    creates: "{{ ext_dir.stdout }}/{{ item.name }}.so"
+  with_items: "{{ pecl_extensions | default([]) }}"
   become: yes
   notify: Restart FPM
 
-- name: Create YAML Config
-  lineinfile:
-    dest: /etc/php5/mods-available/yaml.ini
-    line: extension=yaml.so
-    create: yes
+- name: Create Extension Config
+  template: src=extension.ini.j2 dest=/etc/php5/mods-available/{{ item.name }}.ini
+  with_items: "{{ pecl_extensions | default([]) }}"
   become: yes
+  notify: Restart FPM
 
-- name: Enable YAML Extension
-  command: php5enmod yaml creates=/etc/php5/fpm/conf.d/20-yaml.ini
+- name: Enable PECL Extensions
+  command: php5enmod {{ item.name }} creates=/etc/php5/fpm/conf.d/{{ item.weight | default(20) }}-{{ item.name }}.ini
+  with_items: "{{ pecl_extensions | default([]) }}"
   become: yes
   notify: Restart FPM
 
@@ -67,18 +62,10 @@
   become: yes
   notify: Restart FPM
 
-- name: Remove Default FPM Pool
+- name: Delete Default FPM Pool
   file: path=/etc/php5/fpm/pool.d/www.conf state=absent
   become: yes
   notify: Restart FPM
-
-- name: Create Log Directory
-  file: path=/var/log/php state=directory owner=www-data group=www-data mode=02775
-  become: yes
-
-- name: Create FPM Log Directory
-  file: path=/var/log/php-fpm state=directory owner=www-data group=www-data mode=02775
-  become: yes
 
 - name: Set FPM Error Log Path
   lineinfile:
@@ -93,39 +80,17 @@
   file: path=/var/log/php5-fpm.log state=absent
   become: yes
 
-- name: Create Session Directory
-  file: path=/var/lib/php5/session state=directory owner=www-data group=www-data mode=02770
-  become: yes
-
-- name: Copy Config
-  template: src=php.ini.j2 dest=/etc/php5/{{ item }}/php.ini
-  become: yes
-  with_items:
-    - fpm
-    - cli
-  notify: Restart FPM
-
-- name: Copy FPM Pool Config
-  template: src=fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf
-  become: yes
-  when: domain is defined
-  notify: Restart FPM
-
-- name: Set Laravel Environment for CLI
-  lineinfile:
-    dest: "{{ ansible_user_dir }}/.profile"
-    regexp: ^\s*export\s+LARAVEL_ENV=
-    line: 'export LARAVEL_ENV="local"'
-  when: env_name == "dev"
+- name: Set Path Variables
+  set_fact:
+    log_path:
+      - /var/log/php
+      - /var/log/php-fpm
+    session_path: /var/lib/php5/session
+    config_path:
+      - /etc/php5/cli/php.ini
+      - /etc/php5/fpm/php.ini
+    fpm_pool_path: /etc/php5/fpm/pool.d
 
 - include: composer.yml
 - include: suhosin.yml
   when: enable_suhosin
-
-- name: Copy index.php
-  copy: src=index.php dest={{ http_root }}/{{ domain }}/public/index.php
-  when: copy_index_php
-
-- name: Copy favicon.ico
-  copy: src=favicon.ico dest={{ http_root }}/{{ domain }}/public/favicon.ico
-  when: copy_favicon

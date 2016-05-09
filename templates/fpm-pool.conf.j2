@@ -12,7 +12,7 @@
 ; - 'chdir'
 ; - 'php_values'
 ; - 'php_admin_values'
-; When not set, the global prefix (or {{ phpenv_root }}/versions/{{ php_version }}) applies instead.
+; When not set, the global prefix applies instead.
 ; Note: This directive can also be relative to the global prefix.
 ; Default Value: none
 ;prefix = /path/to/pools/$pool
@@ -225,7 +225,6 @@ pm.max_requests = 500
 ;   last request memory:  0
 ;
 ; Note: There is a real-time FPM status monitoring sample web page available
-;       It's available in: {{ phpenv_root }}/versions/{{ php_version }}/share/php/fpm/status.html
 ;
 ; Note: The value must start with a leading slash (/). The value can be
 ;       anything, but it may not be a good idea to use the .php extension or it
@@ -401,7 +400,7 @@ env[ENV_NAME] = {{ env_name }}
 ; instead.
 
 ; Note: path INI options can be relative and will be expanded with the prefix
-; (pool, global or {{ phpenv_root }}/versions/{{ php_version }})
+; (pool or global)
 
 ; Default Value: nothing is defined by default except the values in php.ini and
 ;                specified at startup with the -d argument
@@ -411,6 +410,11 @@ env[ENV_NAME] = {{ env_name }}
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 
-php_admin_value[open_basedir] = {{ phpenv_root }}/versions/{{ php_version }}/var:{{ http_root }}/{{ domain }}:/tmp
+{% if php_version | default('') != '' %}
+php_admin_value[open_basedir] = /var/log/php:/var/lib/php5/session:{{ http_root }}/{{ domain }}:/tmp
+{% else %}
+php_admin_value[open_basedir] = {{ phpenv_root }}/versions/{{ php_version | default('') }}/var:{{ http_root }}/{{ domain }}:/tmp
+{% endif %}
+
 php_admin_value[upload_tmp_dir] = /tmp
 php_admin_value[disable_functions] = {{ disabled_php_functions | join(",") }}

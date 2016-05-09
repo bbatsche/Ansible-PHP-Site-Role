@@ -34,8 +34,8 @@
     name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
     state: touch
     mode: 0664
-    owner: "{{ ansible_ssh_user }}"
-    group: www-data
+    owner: www-data
+    group: web-admin
   become: yes
   when: fpm_error_log.stat.exists == false
 
@@ -44,12 +44,7 @@
     name: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}.slow.log"
     state: touch
     mode: 0664
-    owner: "{{ ansible_ssh_user }}"
-    group: www-data
+    owner: www-data
+    group: web-admin
   become: yes
   when: domain | default("") != "" and fpm_slow_log.stat.exists == false
-
-- name: Copy FPM Pool Config
-  template: src=fpm-pool.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/{{ domain }}.conf
-  when: domain | default("") != ""
-  notify: Restart FPM

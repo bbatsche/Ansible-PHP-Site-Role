@@ -13,33 +13,13 @@
     creates=/usr/local/bin/composer
   become: yes
 
-- name: Add Composer's Bin to $PATH
-  lineinfile:
-    dest: "{{ ansible_user_dir }}/.profile"
-    line: 'export PATH="$PATH:$HOME/.composer/vendor/bin"'
-    state: present
-
 - name: Create Composer Directory
   file: path={{ ansible_user_dir }}/.composer state=directory
 
-- block:
-  - name: Install PHPUnit
-    composer:
-      command: require
-      arguments: phpunit/phpunit={{ phpunit_version }}
-      working_dir: "{{ ansible_user_dir }}/.composer/"
-      prefer_dist: yes
-
-  - name: Install PsySH
-    composer:
-      command: require
-      arguments: psy/psysh={{ psysh_version }}
-      working_dir: "{{ ansible_user_dir }}/.composer/"
-      prefer_dist: yes
-
-  - name: Create PHPUnit Alias for Xdebug
-    lineinfile:
-      dest: "{{ ansible_user_dir }}/.profile"
-      line: alias phpunit='php $(which phpunit)'
-  when: env_name == "dev"
-
+- name: Install Composer Packages
+  command: "composer global require {{ item.name }}:{{ item.version }} --prefer-dist --no-interaction"
+  args:
+    creates: ~/.composer/vendor/{{ item.name }}
+  register: composer_result
+  changed_when: composer_result | changed and 'Nothing to install or update' not in composer_result.stderr
+  with_items: "{{ composer_packages | default([]) }}"

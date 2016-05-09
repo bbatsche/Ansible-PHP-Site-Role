@@ -1,6 +1,6 @@
 ---
 - name: Restart FPM
-  service: name=php{{ php_version }}-fpm state=restarted
+  service: name=php{{ php_version | default('5') }}-fpm state=restarted
   become: yes
 
 - name: Rehash Phpenv
