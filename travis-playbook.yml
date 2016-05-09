@@ -1,13 +1,11 @@
 ---
 - hosts: all
   remote_user: root
-  become: true
   vars_files:
   - defaults/main.yml
   - vars/main.yml
   vars:
     domain: phpenv-test.dev
-    xdebug_version: 2.4.0
     pecl_extensions:
     - name: imagick
       version: 3.4.2
