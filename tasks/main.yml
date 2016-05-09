@@ -74,6 +74,12 @@
 - include: default/main.yml
   when: php_version | default('') == ''
 
+- stat: path={{ item | dirname }}
+  with_items: "{{ config_path }}"
+  register: config_stat
+
+- debug: var=config_stat
+
 - name: Copy php.ini
   template: src=php.ini.j2 dest={{ item }}
   with_items: "{{ config_path }}"
