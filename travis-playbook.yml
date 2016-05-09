@@ -8,10 +8,14 @@
   vars:
     domain: phpenv-test.dev
     xdebug_version: 2.4.0
-    phpunit_version: "~5.2"
     pecl_extensions:
     - name: imagick
       version: 3.4.2
+    composer_packages:
+    - name: phpspec/phpspec
+      version: 2.5.*
+    - name: psy/psysh
+      version: 0.7.*
   roles:
   - role: bbatsche.Base
   - role: bbatsche.Nginx

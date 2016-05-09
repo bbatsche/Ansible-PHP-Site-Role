@@ -585,10 +585,10 @@ html_errors = On
 ; Example:
 ;error_log = php_errors.log
 ; Log errors to syslog (Event Log on NT, not valid in Windows 95).
-{% if php_version | default('') != '' %}
+{% if php_version | default('') == '' %}
 error_log = /var/log/php/error.log
 {% else %}
-error_log = {{ phpenv_root }}/versions/{{ php_version | default('') }}/var/log/error.log
+error_log = {{ phpenv_root }}/versions/{{ php_version }}/var/log/error.log
 {% endif %}
 
 ;windows.show_crt_warning
@@ -1354,10 +1354,10 @@ session.save_handler = files
 ; where MODE is the octal representation of the mode. Note that this
 ; does not overwrite the process's umask.
 ; http://php.net/session.save-path
-{% if php_version | default('') != '' %}
+{% if php_version | default('') == '' %}
 session.save_path = /var/lib/php5/session
 {% else %}
-session.save_path = {{ phpenv_root }}/versions/{{ php_version | default('') }}/var/run/session
+session.save_path = {{ phpenv_root }}/versions/{{ php_version }}/var/run/session
 {% endif %}
 
 ; Whether to use strict session mode.

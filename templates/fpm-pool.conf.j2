@@ -410,10 +410,10 @@ env[ENV_NAME] = {{ env_name }}
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 
-{% if php_version | default('') != '' %}
+{% if php_version | default('') == '' %}
 php_admin_value[open_basedir] = /var/log/php:/var/lib/php5/session:{{ http_root }}/{{ domain }}:/tmp
 {% else %}
-php_admin_value[open_basedir] = {{ phpenv_root }}/versions/{{ php_version | default('') }}/var:{{ http_root }}/{{ domain }}:/tmp
+php_admin_value[open_basedir] = {{ phpenv_root }}/versions/{{ php_version }}/var:{{ http_root }}/{{ domain }}:/tmp
 {% endif %}
 
 php_admin_value[upload_tmp_dir] = /tmp
