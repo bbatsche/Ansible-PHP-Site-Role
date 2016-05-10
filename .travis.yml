@@ -22,6 +22,8 @@ install:
   - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
 
   - travis_wait ansible-playbook -i inventory provision-playbook.yml
+
+  - sudo usermod -a -G www-admin $USER
 script:
   # Syntax check
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
