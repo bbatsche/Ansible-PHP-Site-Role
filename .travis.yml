@@ -23,7 +23,7 @@ install:
 
   - travis_wait ansible-playbook -i inventory provision-playbook.yml
 
-  - sudo usermod -a -G www-admin $USER
+  - sudo usermod -a -G web-admin $USER
 script:
   # Syntax check
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
