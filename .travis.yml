@@ -24,11 +24,11 @@ script:
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - travis_wait 40 ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION" -ephpenv_root=/phpenv
+  - travis_wait 40 ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
 
   # Idempotence test
   - >
-    ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION" -ephpenv_root=/phpenv
+    ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
