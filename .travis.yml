@@ -29,12 +29,11 @@ script:
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - sudo -E su $USER -c "travis_wait 40 ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION"
+  - travis_wait 40 sudo -E su $USER -c "ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION"
 
   # Idempotence test
   - >
-    sudo -E su $USER "
-    ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION
+    sudo -E su $USER "ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)"
