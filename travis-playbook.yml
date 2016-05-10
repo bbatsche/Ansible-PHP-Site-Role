@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  remote_user: travis
   vars_files:
   - defaults/main.yml
   - vars/main.yml
@@ -15,8 +14,6 @@
     - name: psy/psysh
       version: 0.7.*
   roles:
-  - role: bbatsche.Base
-    console_user: travis
   - role: bbatsche.Nginx
     site_type: php
   tasks:

@@ -17,18 +17,19 @@ install:
   - sudo -H pip install "ansible~=$ANSIBLE_VERSION"
   - sudo ansible-galaxy install bbatsche.Base
   - sudo ansible-galaxy install bbatsche.Nginx
+  - echo localhost ansible_connection=local ansible_user=$USER > inventory
+  - travis_wait ansible-playbook -i inventory travis-provision.yml -econsole_user=$USER
 script:
-  - echo localhost > inventory
 
   # Syntax check
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - travis_wait 40 ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
+  - travis_wait 40 ansible-playbook -i inventory travis-playbook.yml -ephp_version="$PHP_VERSION"
 
   # Idempotence test
   - >
-    ansible-playbook -i inventory travis-playbook.yml --connection=local -ephp_version="$PHP_VERSION"
+    ansible-playbook -i inventory travis-playbook.yml -ephp_version="$PHP_VERSION"
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
