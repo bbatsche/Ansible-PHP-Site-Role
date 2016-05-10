@@ -19,17 +19,14 @@ install:
   - sudo ansible-galaxy install bbatsche.Base
   - sudo ansible-galaxy install bbatsche.Nginx
 
-  - echo localhost ansible_connection=local ansible_user=$USER > inventory
+  - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
 
-  - travis_wait ansible-playbook -i inventory travis-provision.yml -econsole_user=$USER
-
-  - groups
+  - travis_wait ansible-playbook -i inventory provision-playbook.yml
 script:
   # Syntax check
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - groups
   - travis_wait 40 ansible-playbook -i inventory travis-playbook.yml -ephp_version="$PHP_VERSION"
 
   # Idempotence test
