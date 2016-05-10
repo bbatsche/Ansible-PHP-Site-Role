@@ -39,15 +39,7 @@
 - command: groups
   register: group_result
 
-- command: getfacl {{ phpenv_root }}
-  register: acl_result
-
-- stat: path={{ phpenv_root }}
-  register: stat_result
-
 - debug: var=group_result
-- debug: var=acl_result
-- debug: var=stat_result
 
 - name: Install Phpenv
   git:
@@ -86,18 +78,6 @@
 
 - include: default/main.yml
   when: php_version | default('') == ''
-
-- stat: path={{ item | dirname }}
-  with_items: "{{ config_path }}"
-  register: config_stat
-
-- debug: var=config_stat
-
-- stat: path={{ item }}
-  with_items: "{{ config_path }}"
-  register: config_stat
-
-- debug: var=config_stat
 
 - name: Copy php.ini
   template: src=php.ini.j2 dest={{ item }}
