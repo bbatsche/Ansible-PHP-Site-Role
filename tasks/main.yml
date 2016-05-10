@@ -36,6 +36,19 @@
     state: present
   become: yes
 
+- command: groups
+  register: group_result
+
+- command: getfacl {{ phpenv_root }}
+  register: acl_result
+
+- stat: "{{ phpenv_root }}"
+  register: stat_result
+
+- debug: var=group_result
+- debug: var=acl_result
+- debug: var=stat_result
+
 - name: Install Phpenv
   git:
     repo: https://github.com/madumlao/phpenv.git
