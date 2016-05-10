@@ -19,6 +19,7 @@ install:
   - sudo ansible-galaxy install bbatsche.Nginx
   - echo localhost ansible_connection=local ansible_user=$USER > inventory
   - travis_wait ansible-playbook -i inventory travis-provision.yml -econsole_user=$USER
+  - sudo tune2fs -l /dev/sda1
 script:
 
   # Syntax check
