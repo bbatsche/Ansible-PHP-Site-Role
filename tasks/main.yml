@@ -42,7 +42,7 @@
 - command: getfacl {{ phpenv_root }}
   register: acl_result
 
-- stat: "{{ phpenv_root }}"
+- stat: path={{ phpenv_root }}
   register: stat_result
 
 - debug: var=group_result
