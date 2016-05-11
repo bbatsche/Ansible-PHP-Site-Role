@@ -27,7 +27,7 @@ script:
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
 
   # Play test
-  - travis_wait 40 sudo -E su $USER -c \'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION\'
+  - travis_wait 40 sudo su $USER -c \\\'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION\\\'
 
   # Idempotence test
   - >
