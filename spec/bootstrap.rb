@@ -39,7 +39,6 @@ end
 shared_examples "phpenv" do
   describe command("phpenv help") do
     it "has no errors" do
-      expect(subject.stderr).to eq ''
       expect(subject.exit_status).to eq 0
     end
   end

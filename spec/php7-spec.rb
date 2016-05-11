@@ -15,7 +15,6 @@ end
 
 describe command("php --version") do
   it "has no errors" do
-    expect(subject.stderr).to eq ''
     expect(subject.exit_status).to eq 0
   end
 
