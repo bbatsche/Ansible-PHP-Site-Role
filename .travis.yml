@@ -28,8 +28,9 @@ script:
 
   # Play test
   - "echo #!/bin/sh >> play.sh"
-  - echo sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION' >> play.sh
+  - echo sudo su $USER -c \'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION\' >> play.sh
   - chmod +x play.sh
+  - cat play.sh
   - travis_wait 40 ./play.sh
 
   # Idempotence test
