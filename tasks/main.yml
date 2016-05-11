@@ -36,11 +36,6 @@
     state: present
   become: yes
 
-- command: groups
-  register: group_result
-
-- debug: var=group_result
-
 - name: Install Phpenv
   git:
     repo: https://github.com/madumlao/phpenv.git
