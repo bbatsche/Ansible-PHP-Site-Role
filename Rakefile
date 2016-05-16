@@ -74,18 +74,13 @@ namespace :init do
     ["files", "library", "templates"].each do |f|
       next unless File.exist? f
 
-      targets = Dir.glob "tasks/*"
-      targets << "spec/playbooks"
-
-      targets.each do |dest|
-        next unless File.directory? dest
-
+      ["tasks", "spec/playbooks"].each do |dest|
         path = "#{dest}/#{f}"
 
         next if File.symlink? path
         raise "File #{path} exists and is not a symlink! Don't know what to do" if File.exist? path
 
-        File.symlink "../../#{f}", path
+        File.symlink(File.expand_path(f), path)
       end
     end
   end
