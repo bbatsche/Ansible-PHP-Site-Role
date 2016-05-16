@@ -1,7 +1,7 @@
 require "serverspec"
 require_relative "lib/ansible_helper"
 
-if ENV.fetch("INTEGRATION", false)
+if ENV.has_key?("CONTINUOUS_INTEGRATION") && ENV["CONTINUOUS_INTEGRATION"] == "true"
   set :backend, :exec
 else
   options = AnsibleHelper.instance.sshOptions
@@ -21,7 +21,7 @@ set :shell, "/bin/bash"
 set :login_shell, true
 
 # Set PATH
-set :path, '/sbin:/usr/local/sbin:/usr/local/bin:$PATH'
+set :path, '/sbin:/usr/sbin:/usr/local/sbin:/usr/local/bin:$PATH'
 
 shared_examples "nginx::config" do
   describe command("nginx -t") do

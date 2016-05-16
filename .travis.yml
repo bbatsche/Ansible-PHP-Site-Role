@@ -5,13 +5,10 @@ dist: trusty
 language: generic
 
 env:
-  global:
-    - INTEGRATION=true
-  matrix:
-    # - ANSIBLE_VERSION="1.9" PHP_VERSION="5.6.21" # Paths in 1.9 are currently broken
-    - ANSIBLE_VERSION="2.0" PHP_VERSION="5.6.21"
-    # - ANSIBLE_VERSION="1.9" PHP_VERSION="7.0.6"
-    - ANSIBLE_VERSION="2.0" PHP_VERSION="7.0.6"
+  # - ANSIBLE_VERSION="1.9" PHP_VERSION="5.6.21" # Paths in 1.9 are currently broken
+  - ANSIBLE_VERSION="2.0" PHP_VERSION="5.6.21"
+  # - ANSIBLE_VERSION="1.9" PHP_VERSION="7.0.6"
+  - ANSIBLE_VERSION="2.0" PHP_VERSION="7.0.6"
 
 before_install:
   - sudo apt-get update -qq
@@ -28,11 +25,16 @@ install:
 
   - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
 
-  - travis_wait ansible-playbook -i inventory provision-playbook.yml
+  - ansible-playbook -i inventory provision-playbook.yml --tags acl
 before_script:
   - "echo #!/bin/sh >> play.sh"
-  - echo sudo su $USER -c \'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION\' >> play.sh
+  - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION'" >> play.sh
   - chmod +x play.sh
+
+  - "echo #!/bin/sh >> spec.sh"
+  - >
+    echo "sudo -E su -l $USER -c 'rvm use default; cd $TRAVIS_BUILD_DIR && rake spec'" >> spec.sh
+  - chmod +x spec.sh
 script:
   # Syntax check
   - ansible-playbook -i inventory travis-playbook.yml --syntax-check
@@ -48,6 +50,6 @@ script:
     && (echo "Idempotence test: pass" && exit 0) || (echo "Idempotence test: fail" && cat idempotence.out && exit 1)
 
   # Serverspec
-  - travis_wait 50 rake spec
+  - travis_wait 50 ./spec.sh
 notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/
