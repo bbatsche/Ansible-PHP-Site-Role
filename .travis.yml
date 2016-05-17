@@ -26,6 +26,9 @@ install:
   - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
 
   - ansible-playbook -i inventory provision-playbook.yml --tags acl
+
+  # Delete Travis provided phpenv
+  - rm -rf $HOME/.phpenv
 before_script:
   - "echo #!/bin/sh >> play.sh"
   - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION'" >> play.sh
