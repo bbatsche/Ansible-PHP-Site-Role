@@ -25,7 +25,7 @@ install:
 
   - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
 
-  - ansible-playbook -i inventory provision-playbook.yml --tags acl
+  - ansible-playbook -i inventory provision-playbook.yml --tags acl,untagged
 
   # Delete Travis provided phpenv
   - rm -rf $HOME/.phpenv
@@ -55,6 +55,6 @@ script:
     && (echo "Idempotence test: pass" && exit 0) || (echo "Idempotence test: fail" && cat idempotence.out && exit 1)
 
   # Serverspec
-  - travis_wait 50 ./spec.sh
+  # - travis_wait 50 ./spec.sh
 notifications:
     webhooks: https://galaxy.ansible.com/api/v1/notifications/
