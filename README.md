@@ -1,7 +1,7 @@
-Ansible Phpenv Site Role
+Ansible PHP Site Role
 ========================
 
-[![Build Status](https://travis-ci.org/bbatsche/Ansible-Phpenv-Site-Role.svg?branch=master)](https://travis-ci.org/bbatsche/Ansible-Phpenv-Site-Role)
+[![Build Status](https://travis-ci.org/bbatsche/Ansible-PHP-Site-Role.svg?branch=master)](https://travis-ci.org/bbatsche/Ansible-PHP-Site-Role)
 
 This Ansible role will install a given version of PHP on your server and set up a site in Nginx running PHP. The role uses [Phpenv](https://github.com/madumlao/phpenv) to manage the different versions of PHP. It should be able to install any version of PHP from 5.2 through 7.0 (although if you're installing PHP 5.2, you may need to seriously rethink your life choices ;-).
 
@@ -20,7 +20,7 @@ Role Variables
 - `max_upload_size` &mdash; Maximum upload size in MB. Default is "10"
 - `timezone` &mdash; Timezone that should be configured in PHP. Default is "Etc/UTC"
 - `mysql_socket` &mdash; Path to default MySQL socket for use when connecting to localhost. Default is "/var/run/mysqld/mysqld.sock"
-- `php_version` &mdash; Version of PHP to install
+- `php_version` &mdash; Version of PHP to install with Phpenv. If this value is omitted, the OS default version will be used instead (5.5 for Ubuntu 14.04)
 - `pecl_extensions` &mdash; A list of additional extension to install from [PECL](https://pecl.php.net/). Each value should have a `name` and a `version`
 - `composer_packages` &mdash; A list of composer packages to install. Each value should have a `name` and a `version` property.
 - `phpenv_version` &mdash; Version of [Phpenv](https://github.com/madumlao/phpenv) to install. Default is a Git SHA: "b003acc"
