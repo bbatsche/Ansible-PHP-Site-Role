@@ -25,7 +25,7 @@ install:
 
   - echo localhost ansible_connection=local ansible_ssh_user=$USER > inventory
 
-  - ansible-playbook -i inventory provision-playbook.yml --tags acl,untagged
+  - ansible-playbook -i inventory provision-playbook.yml --skip-tags timezone,sysctl,apt,ruby,node,bash,swap
 
   # Delete Travis provided phpenv
   - rm -rf $HOME/.phpenv
