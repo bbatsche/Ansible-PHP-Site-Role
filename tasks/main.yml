@@ -76,7 +76,7 @@
 
 - name: Copy php.ini
   template: src=php.ini.j2 dest={{ item }}
-  with_items: "{{ config_path }}"
+  with_items: "{{ ini_path }}"
   become: "{{ php_version | default('') == '' }}"
   notify: Restart FPM
 
@@ -91,13 +91,37 @@
 
 - name: Create Log Directory
   file:
-    name: "{{ item }}"
+    name: "{{ log_dir }}"
     state: directory
     mode: 02775
     owner: www-data
     group: www-data
-  with_items: "{{ log_path }}"
   become: yes
+
+- name: Check for Log File
+  stat: path={{ item }}
+  register: log_items
+  with_items: "{{ log_files }}"
+
+- name: Set Log File Permissions
+  file:
+    name: "{{ item.item }}"
+    state: touch
+    mode: 0664
+    owner: www-data
+    group: web-admin
+  become: yes
+  when: item.stat.exists == false
+  with_items: "{{ log_items.results }}"
+
+- name: Copy FPM Config
+  template: src=fpm.conf.j2 dest={{ fpm_config_path }}
+  become: "{{ php_version | default('') == '' }}"
+  notify: Restart FPM
+
+- name: Create Pool Directory
+  file: name={{ fpm_pool_path }} state=directory
+  become: "{{ php_version | default('') == '' }}"
 
 - name: Copy FPM Pool Config
   template: src=fpm-pool.conf.j2 dest={{ fpm_pool_path }}/{{ domain }}.conf

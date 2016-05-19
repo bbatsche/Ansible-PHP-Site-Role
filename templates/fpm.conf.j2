@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;
 
 ; All relative paths in this configuration file are relative to PHP's install
-; prefix ({{ phpenv_root }}/versions/{{ php_version }}). This prefix can be dynamically changed by using the
+; prefix. This prefix can be dynamically changed by using the
 ; '-p' argument from the command line.
 
 ; Include one or more files. If glob(3) exists, it is used to include a bunch of
@@ -11,7 +11,7 @@
 ; file.
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
-;  - {{ phpenv_root }}/versions/{{ php_version }} otherwise
+;  - {{ "/usr" if php_version | default('') == '' else phpenv_root + "/versions/" + php_version }} otherwise
 ;include=etc/fpm.d/*.conf
 
 ;;;;;;;;;;;;;;;;;;
@@ -20,16 +20,22 @@
 
 [global]
 ; Pid file
-; Note: the default prefix is {{ phpenv_root }}/versions/{{ php_version }}/var
 ; Default Value: none
-pid = run/php-fpm.pid
+{% if php_version | default('') == '' %}
+pid = /var/run/php-fpm/main.pid
+{% else %}
+pid = {{ phpenv_root }}/versions/{{ php_version }}/var/run/php-fpm.pid
+{% endif %}
 
 ; Error log file
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; in a local file.
-; Note: the default prefix is {{ phpenv_root }}/versions/{{ php_version }}
 ; Default Value: log/php-fpm.log
-error_log = log/fpm-error.log
+{% if php_version | default('') == '' %}
+error_log = /var/log/php/fpm-error.log
+{% else %}
+error_log = {{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log
+{% endif %}
 
 ; syslog_facility is used to specify what type of program is logging the
 ; message. This lets syslogd specify that messages from different facilities
@@ -126,4 +132,8 @@ error_log = log/fpm-error.log
 
 ; To configure the pools it is recommended to have one .conf file per
 ; pool in the following directory:
-include=etc/pool.d/*.conf
+{% if php_version | default('') == '' %}
+include = /etc/php5/fpm/pool.d/*.conf
+{% else %}
+include = {{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/*.conf
+{% endif %}

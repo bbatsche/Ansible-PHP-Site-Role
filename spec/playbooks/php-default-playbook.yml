@@ -4,7 +4,7 @@
   - "../../defaults/main.yml"
   - "../../vars/main.yml"
   vars:
-    domain: phpenv-test.dev
+    domain: php-test.dev
     storage_dir: "../../storage"
     composer_packages:
     - name: phpunit/phpunit
@@ -52,6 +52,7 @@
       command: rehash
       php_version: "{{ php_version }}"
       phpenv_root: "{{ phpenv_root }}"
+    when: php_version is defined
   - name: Update RC
-    command: update-rc.d php{{ php_version }}-fpm defaults
+    command: update-rc.d php{{ php_version | default('5') }}-fpm defaults
     become: true

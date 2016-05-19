@@ -50,15 +50,34 @@
     phpenv_root: "{{ phpenv_root }}"
   notify: Rehash Phpenv
 
+- name: Copy FPM Upstart Config
+  template: src=fpm-upstart.conf.j2 dest=/etc/init/php{{ php_version }}-fpm.conf
+  become: yes
+  notify: Update RC
+
+- name: Copy FPM Init Script
+  template: src=fpm-init.sh.j2 dest=/etc/init.d/php{{ php_version }}-fpm mode=0755
+  become: yes
+  notify: Update RC
+
+- name: Delete Default FPM Config
+  file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf.default state=absent
+  notify: Restart FPM
+
 - name: Set Path Variables
   set_fact:
-    log_path:
-      - "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
+    log_dir: "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
     session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
-    config_path:
+    ini_path:
       - "{{ phpenv_root}}/versions/{{ php_version }}/etc/php.ini"
     fpm_pool_path: "{{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d"
+    fpm_config_path: "{{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf"
+    log_files:
+      - "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
+
+- name: Add Domain Slow Log Path
+  set_fact: log_files={{ log_files + [ phpenv_root + '/versions/' + php_version + '/var/log/' + domain + '-slow.log' ] }}
+  when: domain is defined
 
 - include: extensions.yml
-- include: fpm.yml
 - include: composer.yml
