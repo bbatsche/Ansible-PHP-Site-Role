@@ -21,7 +21,7 @@
     set_fact: raw_value={{ lookup('env', 'PHP_VERSION') }}
   - name: Set PHP Version
     set_fact: php_version={{ raw_value }}
-    when: env != ''
+    when: raw_value != ''
   tasks:
   - include: tasks/main.yml
   handlers:
