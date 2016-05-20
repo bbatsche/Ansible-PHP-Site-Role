@@ -76,7 +76,8 @@
       - "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
 
 - name: Add Domain Slow Log Path
-  set_fact: log_files={{ log_files + [ phpenv_root + '/versions/' + php_version + '/var/log/' + domain + '-slow.log' ] }}
+  set_fact:
+    log_files: "{{ log_files }} + [ '{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log' ]"
   when: domain is defined
 
 - include: extensions.yml

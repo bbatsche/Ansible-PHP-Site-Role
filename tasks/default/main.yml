@@ -88,7 +88,8 @@
       - /var/log/php/fpm-error.log
 
 - name: Add Domain Slow Log Path
-  set_fact: log_files={{ log_files + [ '/var/log/php/' + domain + '-slow.log' ] }}
+  set_fact:
+    log_files: "{{ log_files }} + [ '/var/log/php/{{ domain }}-slow.log' ]"
   when: domain is defined
 
 - include: composer.yml
