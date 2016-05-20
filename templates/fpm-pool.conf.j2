@@ -35,7 +35,7 @@ group = www-data
 ;                            (IPv6 and IPv4-mapped) on a specific port;
 ;   '/path/to/unix/socket' - to listen on a unix socket.
 ; Note: This value is mandatory.
-{% if php_version | default('') == '' %}
+{% if php_version is not defined %}
 listen = /var/run/php-fpm/{{ domain }}.sock
 {% else %}
 listen = {{ phpenv_root }}/versions/{{ php_version }}/var/run/{{ domain }}.sock
@@ -315,7 +315,7 @@ pm.max_requests = 500
 ; The log file for slow requests
 ; Default Value: not set
 ; Note: slowlog is mandatory if request_slowlog_timeout is set
-{% if php_version | default('') == '' %}
+{% if php_version is not defined %}
 slowlog = /var/log/php/{{ domain }}-slow.log
 {% else %}
 slowlog = {{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log

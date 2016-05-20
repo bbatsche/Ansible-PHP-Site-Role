@@ -11,7 +11,7 @@
 ; file.
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
-;  - {{ "/usr" if php_version | default('') == '' else phpenv_root + "/versions/" + php_version }} otherwise
+;  - {{ "/usr" if php_version is not defined else phpenv_root + "/versions/" + php_version }} otherwise
 ;include=etc/fpm.d/*.conf
 
 ;;;;;;;;;;;;;;;;;;
@@ -21,7 +21,7 @@
 [global]
 ; Pid file
 ; Default Value: none
-{% if php_version | default('') == '' %}
+{% if php_version is not defined %}
 pid = /var/run/php-fpm/main.pid
 {% else %}
 pid = {{ phpenv_root }}/versions/{{ php_version }}/var/run/php-fpm.pid
@@ -31,7 +31,7 @@ pid = {{ phpenv_root }}/versions/{{ php_version }}/var/run/php-fpm.pid
 ; If it's set to "syslog", log is sent to syslogd instead of being written
 ; in a local file.
 ; Default Value: log/php-fpm.log
-{% if php_version | default('') == '' %}
+{% if php_version is not defined %}
 error_log = /var/log/php/fpm-error.log
 {% else %}
 error_log = {{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log
@@ -132,7 +132,7 @@ error_log = {{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log
 
 ; To configure the pools it is recommended to have one .conf file per
 ; pool in the following directory:
-{% if php_version | default('') == '' %}
+{% if php_version is not defined %}
 include = /etc/php5/fpm/pool.d/*.conf
 {% else %}
 include = {{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/*.conf

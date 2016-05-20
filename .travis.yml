@@ -5,8 +5,8 @@ dist: trusty
 language: generic
 
 env:
-  - ANSIBLE_VERSION="1.9" PHP_VERSION=""
-  - ANSIBLE_VERSION="2.0" PHP_VERSION=""
+  - ANSIBLE_VERSION="1.9"
+  - ANSIBLE_VERSION="2.0"
   - ANSIBLE_VERSION="1.9" PHP_VERSION="5.6.21"
   - ANSIBLE_VERSION="2.0" PHP_VERSION="5.6.21"
   - ANSIBLE_VERSION="1.9" PHP_VERSION="7.0.6"
@@ -33,7 +33,7 @@ install:
   - rm -rf $HOME/.phpenv
 before_script:
   - "echo #!/bin/sh >> play.sh"
-  - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml -ephp_version=$PHP_VERSION'" >> play.sh
+  - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml >> play.sh
   - chmod +x play.sh
 
   - "echo #!/bin/sh >> spec.sh"

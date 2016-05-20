@@ -69,15 +69,15 @@
   become: yes
 
 - include: phpenv/main.yml
-  when: php_version | default('') != ''
+  when: php_version is defined
 
 - include: default/main.yml
-  when: php_version | default('') == ''
+  when: php_version is not defined
 
 - name: Copy php.ini
   template: src=php.ini.j2 dest={{ item }}
   with_items: "{{ ini_path }}"
-  become: "{{ php_version | default('') == '' }}"
+  become: "{{ php_version is not defined }}"
   notify: Restart FPM
 
 - name: Create Session Directory
@@ -116,16 +116,16 @@
 
 - name: Copy FPM Config
   template: src=fpm.conf.j2 dest={{ fpm_config_path }}
-  become: "{{ php_version | default('') == '' }}"
+  become: "{{ php_version is not defined }}"
   notify: Restart FPM
 
 - name: Create Pool Directory
   file: name={{ fpm_pool_path }} state=directory
-  become: "{{ php_version | default('') == '' }}"
+  become: "{{ php_version is not defined }}"
 
 - name: Copy FPM Pool Config
   template: src=fpm-pool.conf.j2 dest={{ fpm_pool_path }}/{{ domain }}.conf
-  become: "{{ php_version | default('') == '' }}"
+  become: "{{ php_version is not defined }}"
   when: domain is defined
   notify: Restart FPM
 

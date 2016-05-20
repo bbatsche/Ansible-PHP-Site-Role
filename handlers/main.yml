@@ -8,7 +8,7 @@
     command: rehash
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
-  when: php_version | default('') != ''
+  when: php_version is defined
 
 - name: Update RC
   command: update-rc.d php{{ php_version | default('5') }}-fpm defaults
