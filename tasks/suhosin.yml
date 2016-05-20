@@ -32,13 +32,15 @@
     line: "{{ item.line }}"
   become: yes
   notify: Restart FPM
+  # regex_escape could probably make these a hell of a lot cleaner, but is 2.0+ only.
   with_items:
     - { regex: '^;?suhosin\.log\.file\s?=',                        line: "suhosin.log.file = 479 ; S_ALL & ~S_SQL" }
-    - { regex: '^;?suhosin\.log\.file\.name\s?=',             line: "suhosin.log.file.name = /var/log/php/suhosin.log" }
+    - { regex: '^;?suhosin\.log\.file\.name\s?=',                  line: "suhosin.log.file.name = /var/log/php/suhosin.log" }
     - { regex: '^;?suhosin\.executor\.include\.max_traversal\s?=', line: "suhosin.executor.include.max_traversal = 5" }
     - { regex: '^;?suhosin\.executor\.include\.whitelist\s?=',     line: "suhosin.executor.include.whitelist = phar" }
     - { regex: '^;?suhosin\.executor\.disable_emodifier\s?=',      line: "suhosin.executor.disable_emodifier = On" }
     - { regex: '^;?suhosin\.mail\.protect\s?=',                    line: "suhosin.mail.protect = 1" }
+    - { regex: '^;?suhosin\.memory_limit\s?=',                     line: "suhosin.mail.protect = {{ suhosin_memory_limit }}" }
     - { regex: '^;?suhosin\.sql\.comment\s?=',                     line: "suhosin.sql.comment = 1" }
     - { regex: '^;?suhosin\.sql\.opencomment\s?=',                 line: "suhosin.sql.opencomment = 2" }
     - { regex: '^;?suhosin\.session\.cryptua\s?=',                 line: "suhosin.session.cryptua = On" }
@@ -65,6 +67,10 @@
       storage_dir + '/' + ansible_hostname + '/suhosin-session-key chars=ascii_letters,digits length=64') }}
   become: yes
   notify: Restart FPM
+
+- name: Add Suhosin Log Path
+  set_fact:
+    log_files: "{{ log_files }} + [ '/var/log/php/suhosin.log' ]"
 
 - name: Enable Suhosin Configuration
   command: php5enmod suhosin creates=/etc/php5/fpm/conf.d/01-suhosin.ini

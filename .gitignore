@@ -82,6 +82,3 @@ tmtags
 
 /spec/playbooks/*
 !/spec/playbooks/*.yml
-
-/tasks/*
-!/tasks/**.yml

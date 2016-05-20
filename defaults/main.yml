@@ -16,6 +16,8 @@ timezone: Etc/UTC
 
 mysql_socket: /var/run/mysqld/mysqld.sock
 
+suhosin_memory_limit: 1024M
+
 disabled_php_functions:
   - dl
   - exec

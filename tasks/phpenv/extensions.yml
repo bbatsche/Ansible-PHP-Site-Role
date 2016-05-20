@@ -1,4 +1,7 @@
 ---
+# Note: Do not put use template or file tasks when in a tasks sub directory!
+# Ansible 1.9 will not determine the path correctly.
+
 - name: Enable ZendOpcache
   lineinfile:
     dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/10-opcache.ini"

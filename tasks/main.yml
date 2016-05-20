@@ -68,10 +68,10 @@
   template: src=phpenv.sh.j2 dest=/etc/profile.d/phpenv.sh mode=0755
   become: yes
 
-- include: phpenv/main.yml
+- include: phpenv.yml
   when: php_version is defined
 
-- include: default/main.yml
+- include: default.yml
   when: php_version is not defined
 
 - name: Create Session Directory
@@ -107,6 +107,23 @@
   become: yes
   when: item.stat.exists == false
   with_items: "{{ log_items.results }}"
+
+- name: Check for Composer
+  stat: path={{ composer_path }}
+  register: composer_result
+
+- name: Download Composer Installer
+  get_url: url=https://getcomposer.org/installer dest=/tmp/install-composer.php
+  when: composer_result.stat.exists == false
+
+- name: Create Composer Directory
+  file: path={{ composer_dir }} state=directory
+
+- include: phpenv/composer.yml
+  when: php_version is defined
+
+- include: default/composer.yml
+  when: php_version is not defined
 
 - name: Copy phpinfo.php
   copy: src=phpinfo.php dest={{ http_root }}/{{ domain }}/public/phpinfo.php

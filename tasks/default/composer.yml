@@ -1,25 +1,17 @@
 ---
-- name: Check for Composer
-  stat: path=/usr/local/bin/composer
-  register: composer_result
-
-- name: Download Composer Installer
-  get_url: url=https://getcomposer.org/installer dest=/tmp/install-composer.php
-  when: composer_result.stat.exists == false
+# Note: Do not put use template or file tasks when in a tasks sub directory!
+# Ansible 1.9 will not determine the path correctly.
 
 - name: Install Composer
   command: >
     php /tmp/install-composer.php --install-dir=/usr/local/bin --filename=composer
-    creates=/usr/local/bin/composer
+    creates={{ composer_path }}
   become: yes
-
-- name: Create Composer Directory
-  file: path={{ ansible_user_dir }}/.composer state=directory
 
 - name: Install Composer Packages
   command: "composer global require {{ item.name }}:{{ item.version }} --prefer-dist --no-interaction"
   args:
-    creates: ~/.composer/vendor/{{ item.name }}
+    creates: "{{ composer_dir }}/vendor/{{ item.name }}"
   register: composer_result
   changed_when: composer_result | changed and 'Nothing to install or update' not in composer_result.stderr
   with_items: "{{ composer_packages | default([]) }}"

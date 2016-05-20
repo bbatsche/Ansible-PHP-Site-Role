@@ -100,12 +100,13 @@
     session_path: /var/lib/php5/session
     log_files:
       - /var/log/php/fpm-error.log
+    composer_path: /usr/local/bin/composer
+    composer_dir: "{{ ansible_user_dir }}/.composer"
 
 - name: Add Domain Slow Log Path
   set_fact:
     log_files: "{{ log_files }} + [ '/var/log/php/{{ domain }}-slow.log' ]"
   when: domain is defined
 
-- include: composer.yml
 - include: suhosin.yml
   when: enable_suhosin
