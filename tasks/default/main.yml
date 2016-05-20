@@ -75,15 +75,29 @@
   file: path=/var/run/php-fpm state=directory
   become: yes
 
+- name: Copy php.ini
+  template: src=php.ini.j2 dest={{ item }}
+  with_items:
+    - /etc/php5/cli/php.ini
+    - /etc/php5/fpm/php.ini
+  become: yes
+  notify: Restart FPM
+
+- name: Copy FPM Config
+  template: src=fpm.conf.j2 dest=/etc/php5/fpm/php-fpm.conf
+  become: yes
+  notify: Restart FPM
+
+- name: Copy FPM Pool Config
+  template: src=fpm-pool.conf.j2 dest=/etc/php5/fpm/pool.d/{{ domain }}.conf
+  become: yes
+  when: domain is defined
+  notify: Restart FPM
+
 - name: Set Path Variables
   set_fact:
     log_dir: /var/log/php
     session_path: /var/lib/php5/session
-    ini_path:
-      - /etc/php5/cli/php.ini
-      - /etc/php5/fpm/php.ini
-    fpm_pool_path: /etc/php5/fpm/pool.d
-    fpm_config_path: /etc/php5/fpm/php-fpm.conf
     log_files:
       - /var/log/php/fpm-error.log
 

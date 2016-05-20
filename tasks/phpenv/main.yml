@@ -64,14 +64,26 @@
   file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf.default state=absent
   notify: Restart FPM
 
+- name: Copy php.ini
+  template: src=php.ini.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/php.ini
+  notify: Restart FPM
+
+- name: Copy FPM Config
+  template: src=fpm.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf
+  notify: Restart FPM
+
+- name: Create Pool Directory
+  file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d state=directory
+
+- name: Copy FPM Pool Config
+  template: src=fpm-pool.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/{{ domain }}.conf
+  when: domain is defined
+  notify: Restart FPM
+
 - name: Set Path Variables
   set_fact:
     log_dir: "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
     session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
-    ini_path:
-      - "{{ phpenv_root}}/versions/{{ php_version }}/etc/php.ini"
-    fpm_pool_path: "{{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d"
-    fpm_config_path: "{{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf"
     log_files:
       - "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
 
