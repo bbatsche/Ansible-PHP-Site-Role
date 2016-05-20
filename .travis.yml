@@ -33,7 +33,7 @@ install:
   - rm -rf $HOME/.phpenv
 before_script:
   - "echo #!/bin/sh >> play.sh"
-  - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml >> play.sh
+  - echo "sudo -E su $USER -c 'ansible-playbook -i inventory travis-playbook.yml'" >> play.sh
   - chmod +x play.sh
 
   - "echo #!/bin/sh >> spec.sh"
