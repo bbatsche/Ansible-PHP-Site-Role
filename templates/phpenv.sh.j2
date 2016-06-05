@@ -11,6 +11,12 @@ eval "$(phpenv init -)"
 # Load xdebug Zend extension with php command
 alias php='php -dzend_extension=xdebug.so'
 
-# PHPUnit needs xdebug for coverage. In this case, just make an alias with php command prefix.
-alias phpunit='php $(phpenv which phpunit)'
+# PHPUnit needs xdebug for coverage. In this case, make a function that calls either the vendor install binary, or global version.
+phpunit() {
+    if [ -e ./vendor/bin/phpunit ]; then
+        php ./vendor/bin/phpunit "$@"
+    else
+        php $(phpenv which phpunit) "$@"
+    fi
+}
 {% endif %}
