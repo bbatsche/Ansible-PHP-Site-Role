@@ -58,7 +58,7 @@
 
 - name: Install Phpenv Composer Plugin
   git:
-    repo: https://github.com/ngyuki/phpenv-composer.git
+    repo: https://github.com/bbatsche/phpenv-composer.git
     dest: "{{ phpenv_root }}/plugins/phpenv-composer"
     version: "{{ phpenv_composer_version }}"
     update: no
