@@ -1,40 +1,37 @@
 ---
 - hosts: all
+
   vars_files:
-  - defaults/main.yml
-  - vars/main.yml
+    - defaults/main.yml
+    - vars/main.yml
+
   vars:
     domain: phpenv-test.dev
+
     pecl_extensions:
-    - name: imagick
-      version: 3.4.2
+      - name: imagick
+        version: 3.4.2
+
     composer_packages:
-    - name: phpspec/phpspec
-      version: 2.5.*
-    - name: psy/psysh
-      version: 0.7.*
+      - name: phpspec/phpspec
+        version: 2.5.*
+      - name: psy/psysh
+        version: 0.7.*
+
   roles:
-  - role: bbatsche.Nginx
-    site_type: php
+    - role: bbatsche.Nginx
+      site_type: php
+
   pre_tasks:
-  - name: Get ENV
-    set_fact: raw_value={{ lookup('env', 'PHP_VERSION') }}
-  - name: Set PHP Version
-    set_fact: php_version={{ raw_value }}
-    when: raw_value != ''
+    - name: Get ENV
+      set_fact: raw_value={{ lookup('env', 'PHP_VERSION') }}
+
+    - name: Set PHP Version
+      set_fact: php_version={{ raw_value }}
+      when: raw_value != ''
+
   tasks:
-  - include: tasks/main.yml
+    - include: tasks/main.yml
+
   handlers:
-  - include: handlers/main.yml
-  - name: Restart FPM
-    service: name=php{{ php_version | default('5') }}-fpm state=restarted
-    become: true
-  - name: Rehash Phpenv
-    phpenv:
-      command: rehash
-      php_version: "{{ php_version }}"
-      phpenv_root: "{{ phpenv_root }}"
-    when: php_version is defined
-  - name: Update RC
-    command: update-rc.d php{{ php_version | default('5') }}-fpm defaults
-    become: true
+    - include: handlers/main.yml
