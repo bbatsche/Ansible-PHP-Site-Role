@@ -3,7 +3,7 @@ require_relative "bootstrap"
 
 RSpec.configure do |config|
   config.before :suite do
-    AnsibleHelper.instance.playbook("playbooks/php5-playbook.yml", {
+    AnsibleHelper.playbook("playbooks/php5-playbook.yml", ENV["TARGET_HOST"], {
       env_name: "prod",
       copy_phpinfo: true,
       copy_index_php: true

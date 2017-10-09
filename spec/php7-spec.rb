@@ -3,9 +3,12 @@ require_relative "bootstrap"
 
 RSpec.configure do |config|
   config.before :suite do
-    AnsibleHelper.instance.playbook "playbooks/php7-playbook.yml", copy_phpinfo: true, copy_index_php: true
+    AnsibleHelper.playbook("playbooks/php7-playbook.yml", ENV["TARGET_HOST"], {
+      copy_phpinfo: true,
+      copy_index_php: true
+    })
 
-    set :env, :PHPENV_VERSION => "7.0.6"
+    set :env, :PHPENV_VERSION => "7.1.10"
   end
 end
 
