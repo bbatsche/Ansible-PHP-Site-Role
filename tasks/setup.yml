@@ -1,0 +1,102 @@
+---
+- name: Create Phpenv Directory
+  file:
+    path: "{{ phpenv_root }}"
+    state: directory
+    owner: root
+    group: web-admin
+    mode: 02775
+  become: yes
+
+- name: Allow Web Admins to Write Phpenv Directory
+  acl:
+    name: "{{ phpenv_root }}"
+    etype: group
+    entity: web-admin
+    permissions: rwx
+    state: present
+  become: yes
+
+- name: Allow Web Admins Write to Future Directories in Phpenv
+  acl:
+    name: "{{ phpenv_root }}"
+    etype: group
+    entity: web-admin
+    permissions: rwx
+    default: yes
+    state: present
+  become: yes
+
+- name: Set ACL Mask for Phpenv
+  acl:
+    name: "{{ phpenv_root }}"
+    etype: mask
+    permissions: rwx
+    default: yes
+    state: present
+  become: yes
+
+- name: Install Phpenv
+  git:
+    repo: https://github.com/madumlao/phpenv.git
+    dest: "{{ phpenv_root }}"
+    version: "{{ phpenv_version }}"
+    update: no
+
+- name: Install PHP-Build Plugin
+  git:
+    repo: https://github.com/php-build/php-build.git
+    dest: "{{ phpenv_root }}/plugins/php-build"
+    version: "{{ php_build_version }}"
+    update: no
+
+- name: Install Phpenv Composer Plugin
+  git:
+    repo: https://github.com/bbatsche/phpenv-composer.git
+    dest: "{{ phpenv_root }}/plugins/phpenv-composer"
+    version: "{{ phpenv_composer_version }}"
+    update: no
+  notify: Rehash Phpenv
+
+- name: Add Phpenv to Profile
+  template: src=phpenv.sh.j2 dest=/etc/profile.d/phpenv.sh mode=0755
+  become: yes
+
+- name: Create Session Directory
+  file:
+    name: "{{ session_path }}"
+    state: directory
+    mode: 02770
+    owner: www-data
+    group: www-data
+  become: yes
+
+- name: Add Domain Slow Log Path
+  set_fact:
+    log_files: "{{ log_files }} + [ '{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log' ]"
+  when: domain is defined
+
+- name: Create Log Directory
+  file:
+    name: "{{ log_dir }}"
+    state: directory
+    mode: 02775
+    owner: www-data
+    group: www-data
+  become: yes
+
+- name: Check for Log File
+  stat: path={{ item }}
+  register: log_items
+  with_items: "{{ log_files }}"
+
+- name: Set Log File Permissions
+  file:
+    name: "{{ item.item }}"
+    state: touch
+    mode: 0664
+    owner: www-data
+    group: web-admin
+  become: yes
+  when: item.stat.exists == false
+  with_items: "{{ log_items.results }}"

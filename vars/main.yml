@@ -5,3 +5,10 @@ pear_dirs:
   cache_dir:    /tmp/phpenv/{{ php_version }}/pear/cache
   download_dir: /tmp/phpenv/{{ php_version }}/pear/download
   temp_dir:     /tmp/phpenv/{{ php_version }}/pear
+
+log_dir: "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
+session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
+log_files:
+  - "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
+composer_path: "{{ phpenv_root }}/versions/{{ php_version }}/composer/composer.phar"
+composer_dir: "{{ phpenv_root }}/versions/{{ php_version }}/composer"

@@ -1,6 +1,14 @@
 ---
+- name: Update FPM RC
+  command: update-rc.d php{{ php_version }}-fpm defaults
+  become: yes
+
+- name: Enable FPM Systemd Service
+  systemd: name=php{{ php_version }}-fpm.service enabled=yes daemon_reload=yes
+  become: yes
+
 - name: Restart FPM
-  service: name=php{{ php_version | default('5') }}-fpm state=restarted
+  service: name=php{{ php_version }}-fpm state=restarted
   become: yes
 
 - name: Rehash Phpenv
@@ -10,6 +18,3 @@
     phpenv_root: "{{ phpenv_root }}"
   when: php_version is defined
 
-- name: Update RC
-  command: update-rc.d php{{ php_version | default('5') }}-fpm defaults
-  become: yes

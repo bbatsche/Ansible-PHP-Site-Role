@@ -43,22 +43,28 @@
 - name: Copy Phpenv Definition
   template: src=phpenv_definition.j2 dest=/tmp/{{ php_version }}
 
-- name: Install
+- name: Install PHP
   phpenv:
     arguments: /tmp/{{ php_version }}
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
   notify: Rehash Phpenv
 
-- name: Copy FPM Upstart Config
-  template: src=fpm-upstart.conf.j2 dest=/etc/init/php{{ php_version }}-fpm.conf
-  become: yes
-  notify: Update RC
-
 - name: Copy FPM Init Script
   template: src=fpm-init.sh.j2 dest=/etc/init.d/php{{ php_version }}-fpm mode=0755
   become: yes
-  notify: Update RC
+  notify: Update FPM RC
+
+- name: Copy FPM Upstart Config
+  template: src=fpm-upstart.conf.j2 dest=/etc/init/php{{ php_version }}-fpm.conf
+  become: yes
+  when: ansible_distribution_release == "trusty"
+
+- name: Copy FPM Systemd Config
+  template: src=fpm-systemd.conf.j2 dest=/lib/systemd/system/php{{ php_version }}-fpm.service
+  become: yes
+  when: ansible_distribution_release == "xenial"
+  notify: Enable FPM Systemd Service
 
 - name: Delete Default FPM Config
   file: name={{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf.default state=absent
@@ -79,19 +85,3 @@
   template: src=fpm-pool.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/{{ domain }}.conf
   when: domain is defined
   notify: Restart FPM
-
-- name: Set Path Variables
-  set_fact:
-    log_dir: "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
-    session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
-    log_files:
-      - "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
-    composer_path: "{{ phpenv_root }}/versions/{{ php_version }}/composer/composer.phar"
-    composer_dir: "{{ phpenv_root }}/versions/{{ php_version }}/composer"
-
-- name: Add Domain Slow Log Path
-  set_fact:
-    log_files: "{{ log_files }} + [ '{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log' ]"
-  when: domain is defined
-
-- include: phpenv/extensions.yml

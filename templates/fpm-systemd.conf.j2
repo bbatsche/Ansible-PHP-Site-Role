@@ -1,0 +1,14 @@
+[Unit]
+Description=The PHP FastCGI Process Manager
+After=network.target
+
+[Service]
+Type=forking
+PIDFile={{ phpenv_root }}/versions/{{ php_version }}/var/run/php-fpm.pid
+ExecStartPre={{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf --test
+ExecStart={{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf {{ "-dzend_extension=xdebug.so" if env_name == "dev" else "" }}
+ExecReload={{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf --test
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
