@@ -35,11 +35,7 @@ group = www-data
 ;                            (IPv6 and IPv4-mapped) on a specific port;
 ;   '/path/to/unix/socket' - to listen on a unix socket.
 ; Note: This value is mandatory.
-{% if php_version is not defined %}
-listen = /var/run/php-fpm/{{ domain }}.sock
-{% else %}
 listen = {{ phpenv_root }}/versions/{{ php_version }}/var/run/{{ domain }}.sock
-{% endif %}
 
 ; Set listen(2) backlog.
 ; Default Value: 65535 (-1 on FreeBSD and OpenBSD)
@@ -315,11 +311,7 @@ pm.max_requests = 500
 ; The log file for slow requests
 ; Default Value: not set
 ; Note: slowlog is mandatory if request_slowlog_timeout is set
-{% if php_version is not defined %}
-slowlog = /var/log/php/{{ domain }}-slow.log
-{% else %}
 slowlog = {{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log
-{% endif %}
 
 ; The timeout for serving a single request after which a PHP backtrace will be
 ; dumped to the 'slowlog' file. A value of '0s' means 'off'.
@@ -418,13 +410,6 @@ env[ENV_NAME] = {{ env_name }}
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 
-{% if php_version | default('') == '' %}
-php_admin_value[open_basedir] = /var/log/php:/var/lib/php5/session:{{ http_root }}/{{ domain }}:/tmp
-{% else %}
 php_admin_value[open_basedir] = {{ phpenv_root }}/versions/{{ php_version }}/var:{{ http_root }}/{{ domain }}:/tmp
-{% endif %}
-
-php_admin_flag[suhosin.executor.disable_eval] = on
-
 php_admin_value[upload_tmp_dir] = /tmp
-php_admin_value[disable_functions] = {{ disabled_php_functions | join(",") }}
+php_admin_value[disable_functions] = {{ disabled_php_functions | default([]) | join(",") }}

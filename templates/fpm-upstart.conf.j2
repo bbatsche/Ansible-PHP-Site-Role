@@ -14,4 +14,4 @@ stop on runlevel [016]
 pre-start exec {{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf --test
 
 respawn
-exec {{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --nodaemonize --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf {{ "-dzend_extension=xdebug.so" if env_name == "dev" else ""}}
+exec {{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --nodaemonize --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf {{ "-dzend_extension=xdebug.so" if env_name == "dev" else "" }}
