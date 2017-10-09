@@ -2,12 +2,10 @@
 dynamic_php: no
 
 phpenv_version: "0852611"
-phpenv_composer_version: 1a6611d
-php_build_version: 0bac8bb
+phpenv_composer_version: "1a6611d"
+php_build_version: "5d166fe"
 
-xdebug_version: 2.4.0
-
-enable_suhosin: no
+xdebug_version: 2.5.5
 
 copy_phpinfo: no
 copy_index_php: no
@@ -15,42 +13,3 @@ copy_index_php: no
 timezone: Etc/UTC
 
 mysql_socket: /var/run/mysqld/mysqld.sock
-
-suhosin_memory_limit: 1024M
-
-disabled_php_functions:
-  - dl
-  - exec
-  - ignore_user_abort
-  - passthru
-  - pcntl_alarm
-  - pcntl_exec
-  - pcntl_fork
-  - pcntl_setpriority
-  - pcntl_signal
-  - pcntl_signal_dispatch
-  - pcntl_sigprocmask
-  - pcntl_sigtimedwait
-  - pcntl_sigwaitinfo
-  - posix_getgrgid
-  - posix_getgrnam
-  - posix_getpgid
-  - posix_getppid
-  - posix_getpwnam
-  - posix_getpwuid
-  - posix_getuid
-  - posix_kill
-  - posix_setegid
-  - posix_seteuid
-  - posix_setgid
-  - posix_setpgid
-  - posix_setrlimit
-  - posix_setsid
-  - posix_setuid
-  - proc_nice
-  - proc_open
-  - set_time_limit
-  - shell_exec
-  - source
-  - system
-  - virtual
