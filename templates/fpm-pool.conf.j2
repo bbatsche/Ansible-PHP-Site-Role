@@ -49,6 +49,7 @@ listen.backlog = -1
 listen.owner = www-data
 listen.group = www-data
 listen.mode = 0660
+
 ; When POSIX Access Control Lists are supported you can set them using
 ; these options, value is a comma separated list of user/group names.
 ; When set, listen.owner and listen.group are ignored
@@ -106,22 +107,23 @@ pm = dynamic
 ; forget to tweak pm.* to fit your needs.
 ; Note: Used when pm is set to 'static', 'dynamic' or 'ondemand'
 ; Note: This value is mandatory.
-pm.max_children = 5
+{% set pm_max_children = fpm_max_children | default(ansible_memtotal_mb * (fpm_mem_percent | default(80) / 100) / (fpm_mb_per_child | default(30))) | int %}
+pm.max_children = {{ pm_max_children }}
 
 ; The number of child processes created on startup.
 ; Note: Used only when pm is set to 'dynamic'
 ; Default Value: min_spare_servers + (max_spare_servers - min_spare_servers) / 2
-pm.start_servers = 2
+pm.start_servers = {{ fpm_start_servers | default([(pm_max_children * (fpm_start_percent | default(20)) / 100), 2] | max) | int }}
 
 ; The desired minimum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.min_spare_servers = 1
+pm.min_spare_servers = {{ fpm_start_servers | default([(pm_max_children * (fpm_min_spare_percent | default(10)) / 100), 1] | max) | int }}
 
 ; The desired maximum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.max_spare_servers = 3
+pm.max_spare_servers = {{ fpm_start_servers | default(pm_max_children * (fpm_max_spare_percent | default(80)) / 100) | int }}
 
 ; The number of seconds after which an idle process will be killed.
 ; Note: Used only when pm is set to 'ondemand'
@@ -365,7 +367,7 @@ catch_workers_output = yes
 ; Setting to "no" will make all environment variables available to PHP code
 ; via getenv(), $_ENV and $_SERVER.
 ; Default Value: yes
-;clear_env = no
+clear_env = no
 
 ; Limits the extensions of the main script FPM will allow to parse. This can
 ; prevent configuration mistakes on the web server side. You should only limit
@@ -410,6 +412,6 @@ env[ENV_NAME] = {{ env_name }}
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 
-php_admin_value[open_basedir] = {{ phpenv_root }}/versions/{{ php_version }}/var:{{ http_root }}/{{ domain }}:/tmp
+php_admin_value[open_basedir] = {{ php_open_basedir | default([]) | union([phpenv_root + "/version/" + php_version + "/var", http_root + "/" + domain, "/tmp"]) | join(":") }}
 php_admin_value[upload_tmp_dir] = /tmp
-php_admin_value[disable_functions] = {{ disabled_php_functions | default([]) | join(",") }}
+php_admin_value[disable_functions] = {{ php_disabled_functions | default([]) | join(",") }}
