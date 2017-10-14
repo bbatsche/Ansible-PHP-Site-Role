@@ -85,3 +85,52 @@
   template: src=fpm-pool.conf.j2 dest={{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/{{ domain }}.conf
   when: domain is defined
   notify: Restart FPM
+
+- name: Create Session Directory
+  file:
+    name: "{{ session_path }}"
+    state: directory
+    mode: 02770
+    owner: www-data
+    group: www-data
+  become: yes
+
+- name: Create Log Directory
+  file:
+    name: "{{ log_dir }}"
+    state: directory
+    mode: 02775
+    owner: www-data
+    group: www-data
+  become: yes
+
+- name: Check for FPM Error Log
+  stat: path={{ fpm_error_log }}
+  register: fpm_error_log_stat
+
+- name: Set FPM Error Log Permissions
+  file:
+    name: "{{ fpm_error_log }}"
+    state: touch
+    mode: 0664
+    owner: www-data
+    group: web-admin
+  become: yes
+  when: fpm_error_log_stat.stat.exists == false
+
+- block:
+  - name: Check for Domain Slow Log
+    stat: path={{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log
+    register: slow_log_stat
+
+  - name: Set Domain Slow Log Permissions
+    file:
+      name: "{{ fpm_error_log }}"
+      state: touch
+      mode: 0664
+      owner: www-data
+      group: web-admin
+    become: yes
+    when: slow_log_stat.stat.exists == false
+  when: domain is defined
+

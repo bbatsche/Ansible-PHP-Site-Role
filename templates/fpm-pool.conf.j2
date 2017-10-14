@@ -382,9 +382,9 @@ clear_env = no
 ; Default Value: clean env
 env[HOSTNAME] = $HOSTNAME
 ;env[PATH] = /usr/local/bin:/usr/bin:/bin
-env[TMP] = /tmp
-env[TMPDIR] = /tmp
-env[TEMP] = /tmp
+env[TMP] = /tmp/phpenv/{{ php_version}}/{{ domain }}
+env[TMPDIR] = /tmp/phpenv/{{ php_version}}/{{ domain }}
+env[TEMP] = /tmp/phpenv/{{ php_version}}/{{ domain }}
 env[ENV_NAME] = {{ env_name }}
 
 ; Additional php.ini defines, specific to this pool of workers. These settings
@@ -412,6 +412,6 @@ env[ENV_NAME] = {{ env_name }}
 ;php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 32M
 
-php_admin_value[open_basedir] = {{ php_open_basedir | default([]) | union([phpenv_root + "/version/" + php_version + "/var", http_root + "/" + domain, "/tmp"]) | join(":") }}
-php_admin_value[upload_tmp_dir] = /tmp
+php_admin_value[open_basedir] = {{ php_open_basedir | default([]) | union([phpenv_root + "/version/" + php_version + "/var", http_root + "/" + domain, "/tmp/phpenv/" + php_version + "/" + domain]) | join(":") }}
+php_admin_value[upload_tmp_dir] = /tmp/phpenv/{{ php_version }}/{{ domain }}
 php_admin_value[disable_functions] = {{ php_disabled_functions | default([]) | join(",") }}

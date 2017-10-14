@@ -775,7 +775,7 @@ file_uploads = On
 ; Temporary directory for HTTP uploaded files (will use system default if not
 ; specified).
 ; http://php.net/upload-tmp-dir
-upload_tmp_dir = /tmp
+upload_tmp_dir = /tmp/phpenv/{{ php_version }}
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
@@ -1670,7 +1670,7 @@ soap.wsdl_cache_enabled=1
 
 ; Sets the directory name where SOAP extension will put cache files.
 ; http://php.net/soap.wsdl-cache-dir
-soap.wsdl_cache_dir="/tmp"
+soap.wsdl_cache_dir="/tmp/phpenv/{{ php_version }}"
 
 ; (time to live) Sets the number of second while cached file will be used
 ; instead of original one.
@@ -1707,7 +1707,9 @@ ldap.max_links = -1
 ;opcache.enable=0
 
 ; Determines if Zend OPCache is enabled for the CLI version of PHP
-opcache.enable_cli = 1
+{# Enabling Opcache for the CLI can work for single user installations #}
+{# Otherwise it becomes either a permission or a security nightmare #}
+opcache.enable_cli = {{ opcache_enable_cli | default("0")}}
 
 ; The OPcache shared memory storage size.
 opcache.memory_consumption = {{ opcache_memory_consumption | default("128") }}
@@ -1812,7 +1814,7 @@ opcache.fast_shutdown = {{ opcache_fast_shutdown | default("0") }}
 ; Enables and sets the second level cache directory.
 ; It should improve performance when SHM memory is full, at server restart or
 ; SHM reset. The default "" disables file based caching.
-;opcache.file_cache=
+opcache.file_cache = /tmp/phpenv/{{ php_version }}/opcache
 
 ; Enables or disables opcode caching in shared memory.
 ;opcache.file_cache_only=0

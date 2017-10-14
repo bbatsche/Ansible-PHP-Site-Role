@@ -7,6 +7,10 @@
   systemd: name=php{{ php_version }}-fpm.service enabled=yes daemon_reload=yes
   become: yes
 
+- name: Create Temp Files
+  command: systemd-tmpfiles --create
+  become: yes
+
 - name: Restart FPM
   service: name=php{{ php_version }}-fpm state=restarted
   become: yes

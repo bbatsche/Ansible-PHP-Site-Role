@@ -62,41 +62,31 @@
   template: src=phpenv.sh.j2 dest=/etc/profile.d/phpenv.sh mode=0755
   become: yes
 
-- name: Create Session Directory
-  file:
-    name: "{{ session_path }}"
-    state: directory
-    mode: 02770
-    owner: www-data
-    group: www-data
+- name: Add Tempfiles Config
+  lineinfile:
+    path: /etc/tmpfiles.d/phpenv.conf
+    state: present
+    line: d /tmp/phpenv/{{ item.path }} {{ item.mode }} www-data web-admin 1w
+    regexp: "^d /tmp/phpenv/{{ item.path }}"
+    create: yes
   become: yes
+  notify: Create Temp Files
+  when: ansible_distribution_release == "xenial"
+  with_items:
+    - { path: "{{ php_version }}",               mode: "02775" }
+    - { path: "{{ php_version }}/opcache",       mode: "02770" }
+    - { path: "{{ php_version }}/pear",          mode: "02770" }
+    - { path: "{{ php_version }}/pear/cache",    mode: "02770" }
+    - { path: "{{ php_version }}/pear/download", mode: "02770" }
 
-- name: Add Domain Slow Log Path
-  set_fact:
-    log_files: "{{ log_files }} + [ '{{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log' ]"
-  when: domain is defined
-
-- name: Create Log Directory
-  file:
-    name: "{{ log_dir }}"
-    state: directory
-    mode: 02775
-    owner: www-data
-    group: www-data
+- name: Add Domain to Tempfiles
+  lineinfile:
+    path: /etc/tmpfiles.d/phpenv.conf
+    state: present
+    line: d /tmp/phpenv/{{ php_version }}/{{ domain }} 02770 www-data web-admin 1w
+    create: yes
   become: yes
-
-- name: Check for Log File
-  stat: path={{ item }}
-  register: log_items
-  with_items: "{{ log_files }}"
-
-- name: Set Log File Permissions
-  file:
-    name: "{{ item.item }}"
-    state: touch
-    mode: 0664
-    owner: www-data
-    group: web-admin
-  become: yes
-  when: item.stat.exists == false
-  with_items: "{{ log_items.results }}"
+  notify: Create Temp Files
+  when:
+    - domain is defined
+    - ansible_distribution_release == "xenial"

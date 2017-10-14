@@ -1,4 +1,4 @@
-# php5-fpm - The PHP FastCGI Process Manager
+# php-fpm - The PHP FastCGI Process Manager
 
 description "The PHP FastCGI Process Manager"
 
@@ -11,7 +11,26 @@ stop on runlevel [016]
 #
 # reload signal USR2
 
-pre-start exec {{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf --test
+pre-start script
+    mkdir -p -m02775 /tmp/phpenv/{{ php_version }}
+    mkdir -p -m02777 /tmp/phpenv/{{ php_version }}/opcache
+    mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/pear
+    mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/pear/cache
+    mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/pear/download
+
+    for conf in {{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/*.conf; do
+        file=${conf##*/}
+        domain=${file%.txt}
+
+        mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/$domain
+    done
+
+    chown -R www-data:web-admin /tmp/phpenv
+
+    {{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf --test
+end script
 
 respawn
 exec {{ phpenv_root }}/versions/{{ php_version }}/sbin/php-fpm --nodaemonize --fpm-config {{ phpenv_root }}/versions/{{ php_version }}/etc/php-fpm.conf {{ "-dzend_extension=xdebug.so" if env_name == "dev" else "" }}
+
+post-stop exec rm -rf /tmp/phpenv/{{ php_version }}
