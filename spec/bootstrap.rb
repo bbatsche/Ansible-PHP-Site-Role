@@ -25,11 +25,3 @@ set :login_shell, true
 
 # Set PATH
 set :path, "/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$PATH"
-
-shared_examples "phpenv" do
-  describe command("phpenv help") do
-    it "has no errors" do
-      expect(subject.exit_status).to eq 0
-    end
-  end
-end

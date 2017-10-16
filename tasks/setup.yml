@@ -67,7 +67,7 @@
     path: /etc/tmpfiles.d/phpenv.conf
     state: present
     line: d /tmp/phpenv/{{ item.path }} {{ item.mode }} www-data web-admin 1w
-    regexp: "^d /tmp/phpenv/{{ item.path }}"
+    regexp: "^d /tmp/phpenv/{{ item.path }} "
     create: yes
   become: yes
   notify: Create Temp Files
