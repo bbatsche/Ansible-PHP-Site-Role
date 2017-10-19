@@ -29,14 +29,6 @@
     - role: bbatsche.Nginx
       site_type: php
 
-  pre_tasks:
-    - name: Get ENV
-      set_fact: raw_value={{ lookup('env', 'PHP_VERSION') }}
-
-    - name: Set PHP Version
-      set_fact: php_version={{ raw_value }}
-      when: raw_value != ''
-
   tasks:
     - include: tasks/main.yml
 
