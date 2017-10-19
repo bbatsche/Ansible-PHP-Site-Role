@@ -1,6 +1,4 @@
-require_relative "lib/ansible_helper"
 require_relative "bootstrap"
-require_relative "shared/phpenv"
 
 RSpec.configure do |config|
   config.before :suite do
@@ -38,18 +36,20 @@ RSpec.configure do |config|
   end
 end
 
-describe "php" do
-  include_examples "php"
+describe "PHP" do
+  include_examples "php is installed"
 end
 
-describe "phpenv" do
-  include_examples "phpenv"
+describe "Phpenv" do
+  include_examples "phpenv is installed"
 end
 
-describe command("php -i") do
+describe "PHP Config" do
+  let(:php_info) { command("php -i").stdout }
+
+  include_examples("default phpinfo config")
+
   include_examples("phpinfo", "error_log", "/usr/local/phpenv/versions/7.1.10/var/log/error.log")
-  include_examples("phpinfo", "Default timezone", "Etc/UTC")
-  include_examples("phpinfo", "PDO Driver for PostgreSQL", "enabled")
 
   include_examples("phpinfo", "imagick module", "enabled")
   include_examples("phpinfo", "imagick module version", "3.4.3")
@@ -61,12 +61,20 @@ describe command("php -i") do
   include_examples("phpinfo", "Module Version", "2.0.2")
 end
 
-context "composer" do
-  describe command("composer about") do
+context "Composer packages" do
+  describe "composer" do
+    let(:subject) { command("composer about") }
+
+    it "is installed" do
+      expect(subject.stdout).to match /Composer - Package Management for PHP/
+    end
+
     include_examples("no errors")
   end
 
-  describe command("phpunit --version") do
+  describe "phpunit" do
+    let(:subject) { command("phpunit --version") }
+
     it "is installed" do
       expect(subject.stdout).to match /^PHPUnit 6\.4\.\d+/
     end
@@ -74,7 +82,9 @@ context "composer" do
     include_examples("no errors")
   end
 
-  describe command("psysh --version") do
+  describe "psysh" do
+    let(:subject) { command("psysh --version") }
+
     it "is installed" do
       expect(subject.stdout).to match /Psy Shell v0\.8\.\d+/
     end
@@ -82,7 +92,9 @@ context "composer" do
     include_examples("no errors")
   end
 
-  describe command("phpspec --version") do
+  describe "phpspect" do
+    let(:subject) { command("phpspec --version") }
+
     it "is installed" do
       expect(subject.stdout).to match /phpspec 4\.0\.\d+/
     end

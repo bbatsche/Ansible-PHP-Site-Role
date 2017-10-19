@@ -18,7 +18,7 @@
 
       - name: Create Openbase Dir Test
         copy:
-          content: "<?php include '/etc/passwd';"
+          content: "<?php readfile(!empty($_GET['path']) ? $_GET['path'] : '/etc/passwd');"
           dest: "{{ http_root }}/{{ domain }}/public/open_basedir_test.php"
 
       - name: Create Session Test
