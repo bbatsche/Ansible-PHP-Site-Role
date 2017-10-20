@@ -40,7 +40,7 @@ script:
   # Syntax check
   - ansible-playbook travis-playbook.yml --syntax-check
 
-  - travis_wait rake ansible:playbook[travis-playbook.yml]
+  - travis_wait 40 rake ansible:playbook[travis-playbook.yml]
 
   # Idempotence test
   - rake ansible:playbook[travis-playbook.yml] > idempotence.out
@@ -48,7 +48,7 @@ script:
     grep -q "changed=0.*failed=0" idempotence.out
     && (echo "Idempotence test: pass" && exit 0) || (echo "Idempotence test: fail" && cat idempotence.out && exit 1)
 
-  - travis_wait rake spec
+  - travis_wait 40 rake spec
 
 after_script:
   - rake environment:destroy
