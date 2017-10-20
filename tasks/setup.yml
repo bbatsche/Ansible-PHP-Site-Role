@@ -81,7 +81,7 @@
 
 - name: Add Domain to Tempfiles
   lineinfile:
-    path: /etc/tmpfiles.d/phpenv.conf
+    dest: /etc/tmpfiles.d/phpenv.conf
     state: present
     line: d /tmp/phpenv/{{ php_version }}/{{ domain }} 02770 www-data web-admin 1w
     create: yes

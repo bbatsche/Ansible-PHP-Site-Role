@@ -92,7 +92,7 @@ context "Composer packages" do
     include_examples("no errors")
   end
 
-  describe "phpspect" do
+  describe "phpspec" do
     let(:subject) { command("phpspec --version") }
 
     it "is installed" do
