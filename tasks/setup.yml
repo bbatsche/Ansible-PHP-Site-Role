@@ -64,7 +64,7 @@
 
 - name: Add Tempfiles Config
   lineinfile:
-    path: /etc/tmpfiles.d/phpenv.conf
+    dest: /etc/tmpfiles.d/phpenv.conf
     state: present
     line: d /tmp/phpenv/{{ item.path }} {{ item.mode }} www-data web-admin 1w
     regexp: "^d /tmp/phpenv/{{ item.path }} "
