@@ -52,6 +52,18 @@ shared_examples "default phpinfo config" do
   include_examples("phpinfo", "error_log", "/usr/local/phpenv/versions/#{@php_version}/var/log/error.log") unless @php_version.nil?
 end
 
+shared_examples "phpinfo html heading" do |key, value|
+  it "#{key} is #{value}" do
+    expect(php_info).to match %r|<th>\s*#{Regexp.quote(key)}\s*</th>\s*<th>\s*#{Regexp.quote(value)}\s*</th>|
+  end
+end
+
+shared_examples "phpinfo html row" do |key, value, count=1|
+  it "#{key} is #{value}" do
+    expect(php_info).to match %r|<td class="e">\s*#{Regexp.quote(key)}\s*</td>\s*<td class="v">\s*#{Regexp.quote(value)}\s*</td>|
+  end
+end
+
 shared_examples "supports sessions" do |url|
   describe "session_test.php" do
     let(:subject) { command("curl -i #{url}/session_test.php") }
@@ -73,10 +85,10 @@ shared_examples "logs errors" do |url|
     include_examples("curl request", "200")
   end
 
-  describe "logged an error" do
+  describe "Error Log" do
     let(:subject) { command("tail -n 1 /usr/local/phpenv/versions/#{@php_version}/var/log/error.log") }
 
-    it "logged an error" do
+    it "contains the previous error" do
       expect(subject.stdout).to match /Test error message$/
     end
   end

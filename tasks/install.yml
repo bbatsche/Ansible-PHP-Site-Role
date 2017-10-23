@@ -104,13 +104,27 @@
     group: www-data
   become: yes
 
+- name: Check for Error Log
+  stat: path={{ log_dir }}/error.log
+  register: error_log_stat
+
+- name: Set Error Log Permissions
+  file:
+    name: "{{ log_dir }}/error.log"
+    state: touch
+    mode: 0664
+    owner: www-data
+    group: web-admin
+  become: yes
+  when: error_log_stat.stat.exists == false
+
 - name: Check for FPM Error Log
-  stat: path={{ fpm_error_log }}
+  stat: path={{ log_dir }}/fpm-error.log
   register: fpm_error_log_stat
 
 - name: Set FPM Error Log Permissions
   file:
-    name: "{{ fpm_error_log }}"
+    name: "{{ log_dir }}/fpm-error.log"
     state: touch
     mode: 0664
     owner: www-data
@@ -120,12 +134,12 @@
 
 - block:
   - name: Check for Domain Slow Log
-    stat: path={{ phpenv_root }}/versions/{{ php_version }}/var/log/{{ domain }}-slow.log
+    stat: path={{ log_dir }}/{{ domain }}-slow.log
     register: slow_log_stat
 
   - name: Set Domain Slow Log Permissions
     file:
-      name: "{{ fpm_error_log }}"
+      name: "{{ log_dir }}/{{ domain }}-slow.log"
       state: touch
       mode: 0664
       owner: www-data

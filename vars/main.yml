@@ -6,8 +6,6 @@ pear_dirs:
   download_dir: /tmp/phpenv/{{ php_version }}/pear/download
   temp_dir:     /tmp/phpenv/{{ php_version }}/pear
 
-log_dir:       "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
-session_path:  "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
-fpm_error_log: "{{ phpenv_root }}/versions/{{ php_version }}/var/log/fpm-error.log"
-composer_path: "{{ phpenv_root }}/versions/{{ php_version }}/composer/composer.phar"
-composer_dir:  "{{ phpenv_root }}/versions/{{ php_version }}/composer"
+log_dir:      "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
+session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
+composer_dir: "{{ phpenv_root }}/versions/{{ php_version }}/composer"

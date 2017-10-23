@@ -10,6 +10,10 @@
       site_type: php
 
   post_tasks:
+    - name: Truncate Error Log
+      command: truncate -s0 {{ log_dir }}/error.log
+      become: yes
+
     - block:
       - name: Create Disabled Function Test
         copy:

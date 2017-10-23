@@ -1,6 +1,6 @@
 ---
 - name: Check for Composer
-  stat: path={{ composer_path }}
+  stat: path={{ composer_dir }}/composer.phar
   register: composer_result
 
 - name: Download Composer Installer
@@ -13,7 +13,7 @@
 - name: Install Composer
   phpenv:
     shell: php /tmp/install-composer.php --install-dir={{ composer_dir }}
-    creates: "{{ composer_path }}"
+    creates: "{{ composer_dir }}/composer.phar"
     phpenv_root: "{{ phpenv_root }}"
     php_version: "{{ php_version }}"
   notify: Rehash Phpenv

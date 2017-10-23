@@ -37,11 +37,11 @@ describe "PHP Config" do
 
   include_examples("default phpinfo config")
 
-  include_examples("phpinfo", "error_reporting", "32767")
-  include_examples("phpinfo", "display_errors", "STDOUT")
+  include_examples("phpinfo", "error_reporting",        "32767")
+  include_examples("phpinfo", "display_errors",         "STDOUT")
   include_examples("phpinfo", "display_startup_errors", "On")
 
-  include_examples("phpinfo", "Collecting statistics", "Yes")
+  include_examples("phpinfo", "Collecting statistics",        "Yes")
   include_examples("phpinfo", "Collecting memory statistics", "Yes")
 
   include_examples("phpinfo", "zend.assertions", "1")
@@ -50,7 +50,7 @@ describe "PHP Config" do
 
   include_examples("phpinfo", "xdebug support", "enabled")
 
-  include_examples("phpinfo", "ENV_NAME", "dev")
+  include_examples("phpinfo", "ENV_NAME",             "dev")
   include_examples("phpinfo", "$_SERVER['ENV_NAME']", "dev")
 end
 
@@ -72,6 +72,15 @@ context "PHP FPM" do
     include_examples("logs errors", "php-dev.dev")
     include_examples("sets open basedir", "php-dev.dev")
   end
-end
 
-# phpunit phpinfo.php; check for xdebug
+  describe "PHP Config" do
+    let(:php_info) { command("curl php-dev.dev/phpinfo.php").stdout }
+
+    include_examples("phpinfo html heading", "xdebug support",            "enabled")
+    include_examples("phpinfo html row",     "session.save_handler",      "files")
+    include_examples("phpinfo html row",     "session.save_path",         "/usr/local/phpenv/versions/7.1.10/var/run/session")
+    include_examples("phpinfo html row",     "session.serialize_handler", "php_serialize")
+    include_examples("phpinfo html row",     "ENV_NAME",                  "dev")
+    include_examples("phpinfo html row",     "$_SERVER['ENV_NAME']",      "dev")
+  end
+end
