@@ -10,7 +10,7 @@
 
 - name: Copy phpinfo.php
   copy: src=phpinfo.php dest={{ http_root }}/{{ domain }}/public/phpinfo.php
-  when: copy_phpinfo and env_name == "dev"
+  when: copy_phpinfo
 
 - name: Copy index.php
   template: src=index.php.j2 dest={{ http_root }}/{{ domain }}/public/index.php

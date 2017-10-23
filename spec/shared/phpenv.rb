@@ -99,9 +99,14 @@ shared_examples "sets open basedir" do |url, path=''|
     let(:subject) { command("curl -i #{url}/open_basedir_test.php?path=#{path}") }
 
     include_examples("curl request html")
+  end
 
-    it "has open_basedir enabled" do
+  describe "Error Log" do
+    let(:subject) { command("tail -n 8 /usr/local/phpenv/versions/#{@php_version}/var/log/error.log") }
+
+    it "contains the previous error" do
       expect(subject.stdout).to match /open_basedir restriction in effect\. File\(.+\) is not within the allowed path\(s\)/
+      expect(subject.stdout).to match /failed to open stream: Operation not permitted/
     end
   end
 end
