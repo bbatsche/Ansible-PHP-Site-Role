@@ -7,23 +7,6 @@
 
   vars:
     php_version: "7.1.10"
-    domain: phpenv-test.dev
-
-    pecl_extensions:
-      - name: yaml
-        version: "2.0.2"
-      - name: imagick
-        version: "3.4.3"
-      - name: redis
-        version: "3.1.4"
-
-    composer_packages:
-      - name: phpunit/phpunit
-        version: ^6.4
-      - name: phpspec/phpspec
-        version: ^4.0
-      - name: psy/psysh
-        version: ^0.8
 
   roles:
     - role: bbatsche.Nginx

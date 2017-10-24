@@ -40,7 +40,7 @@ script:
   # Syntax check
   - ansible-playbook travis-playbook.yml --syntax-check
 
-  - travis_wait 40 rake ansible:playbook[travis-playbook.yml]
+  - travis_wait 50 rake ansible:playbook[travis-playbook.yml]
 
   # Idempotence test
   - travis_wait 40 rake ansible:playbook[travis-playbook.yml] > idempotence.out
