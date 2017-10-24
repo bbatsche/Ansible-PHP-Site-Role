@@ -12,7 +12,7 @@ RSpec.configure do |config|
       copy_phpinfo: true
     })
 
-    set :env, :PHPENV_VERSION => php_version
+    set :docker_container_exec_options, { :Env => ["PHPENV_VERSION=#{php_version}", "COMPOSER_ALLOW_SUPERUSER=1"] }
   end
 
   config.before :each do

@@ -14,6 +14,17 @@
       command: truncate -s0 {{ log_dir }}/error.log
       become: yes
 
+    # Ansible's service module doesn't play well with Docker, so for testing just manually restart
+    - name: Force Nginx Restart
+      command: service nginx restart warn=no
+      become: yes
+      when: ansible_connection | default('smart') == 'docker'
+
+    - name: Force PHP FPM Restart
+      command: service php{{ php_version }}-fpm restart warn=no
+      become: yes
+      when: ansible_connection | default('smart') == 'docker'
+
     - block:
       - name: Create Disabled Function Test
         copy:

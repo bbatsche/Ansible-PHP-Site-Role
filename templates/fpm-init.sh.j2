@@ -21,8 +21,6 @@ SCRIPTNAME=/etc/init.d/$NAME
 
 PHPENV_VERSION={{ php_version }}
 
-eval "$(phpenv init -)"
-
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
 

@@ -5,6 +5,7 @@
 
 - name: Enable FPM Systemd Service
   systemd: name=php{{ php_version }}-fpm.service enabled=yes daemon_reload=yes
+  when: ansible_connection | default('smart') != 'docker'
   become: yes
 
 - name: Create Temp Files
