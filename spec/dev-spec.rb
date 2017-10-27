@@ -33,8 +33,6 @@ end
 describe "PHP Config" do
   let(:php_info) { command("php -i").stdout }
 
-  @php_version = "7.1.10"
-
   include_examples("default phpinfo config")
 
   include_examples("phpinfo", "error_reporting",        "32767")
