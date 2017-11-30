@@ -10,6 +10,7 @@
 
 - name: Create Temp Files
   command: systemd-tmpfiles --create
+  when: ansible_connection | default('smart') != 'docker'
   become: yes
 
 - name: Restart FPM
