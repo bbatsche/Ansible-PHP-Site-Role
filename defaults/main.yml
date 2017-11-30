@@ -11,5 +11,3 @@ copy_phpinfo: no
 copy_index_php: no
 
 timezone: Etc/UTC
-
-mysql_socket: /var/run/mysqld/mysqld.sock
