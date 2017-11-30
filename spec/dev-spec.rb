@@ -83,4 +83,12 @@ context "PHP FPM" do
     include_examples("phpinfo html row",     "ENV_NAME",                  "dev")
     include_examples("phpinfo html row",     "$_SERVER['ENV_NAME']",      "dev")
   end
+
+  describe "PHP FPM Config" do
+    let(:subject) { file("/usr/local/phpenv/versions/#{@php_version}/etc/pool.d/php-dev.dev.conf") }
+
+    it "should set process manager to ondemand" do
+      expect(subject.content).to match /^pm\s*=\s*ondemand$/
+    end
+  end
 end

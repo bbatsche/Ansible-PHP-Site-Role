@@ -91,4 +91,12 @@ context "PHP FPM" do
       expect(php_info).to_not match /xdebug/
     end
   end
+
+  describe "PHP FPM Config" do
+    let(:subject) { file("/usr/local/phpenv/versions/#{@php_version}/etc/pool.d/php-prod.dev.conf") }
+
+    it "should set process manager to dynamic" do
+      expect(subject.content).to match /^pm\s*=\s*dynamic$/
+    end
+  end
 end

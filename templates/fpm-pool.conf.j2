@@ -96,7 +96,7 @@ listen.mode = 0660
 ;             pm.process_idle_timeout   - The number of seconds after which
 ;                                         an idle process will be killed.
 ; Note: This value is mandatory.
-pm = dynamic
+pm = {{ "ondemand" if env_name == "dev" else "dynamic" }}
 
 ; The number of child processes to be created when pm is set to 'static' and the
 ; maximum number of child processes when pm is set to 'dynamic' or 'ondemand'.
@@ -118,12 +118,12 @@ pm.start_servers = {{ fpm_start_servers | default([(pm_max_children * (fpm_start
 ; The desired minimum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.min_spare_servers = {{ fpm_start_servers | default([(pm_max_children * (fpm_min_spare_percent | default(10)) / 100), 1] | max) | int }}
+pm.min_spare_servers = {{ fpm_min_spare_servers | default([(pm_max_children * (fpm_min_spare_percent | default(10)) / 100), 1] | max) | int }}
 
 ; The desired maximum number of idle server processes.
 ; Note: Used only when pm is set to 'dynamic'
 ; Note: Mandatory when pm is set to 'dynamic'
-pm.max_spare_servers = {{ fpm_start_servers | default(pm_max_children * (fpm_max_spare_percent | default(80)) / 100) | int }}
+pm.max_spare_servers = {{ fpm_max_spare_servers | default(pm_max_children * (fpm_max_spare_percent | default(80)) / 100) | int }}
 
 ; The number of seconds after which an idle process will be killed.
 ; Note: Used only when pm is set to 'ondemand'
