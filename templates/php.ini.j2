@@ -332,7 +332,7 @@ realpath_cache_size = {{ php_realpath_cache_size | default("256k") }}
 ; file or directory. For systems with rarely changing files, consider increasing this
 ; value.
 ; http://php.net/realpath-cache-ttl
-realpath_cache_ttl = {{ php_realpath_cache_ttle | default("600") }}
+realpath_cache_ttl = {{ php_realpath_cache_ttl | default("600") }}
 
 ; Enables or disables the circular reference collector.
 ; http://php.net/zend.enable-gc
@@ -1237,7 +1237,7 @@ session.save_handler = {{ php_session_save_handler | default("files") }}
 ; where MODE is the octal representation of the mode. Note that this
 ; does not overwrite the process's umask.
 ; http://php.net/session.save-path
-session.save_path = {{ php_session_save_path | default(phpenv_root + "/versions/" + php_version + "/var/run/session") }}
+session.save_path = {{ php_session_path }}
 
 ; Whether to use strict session mode.
 ; Strict session mode does not accept uninitialized session ID and regenerate

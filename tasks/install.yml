@@ -88,12 +88,13 @@
 
 - name: Create Session Directory
   file:
-    name: "{{ session_path }}"
+    name: "{{ php_session_path }}"
     state: directory
     mode: 02770
     owner: www-data
     group: www-data
   become: yes
+  when: php_session_save_handler | default("files") == "files"
 
 - name: Create Log Directory
   file:

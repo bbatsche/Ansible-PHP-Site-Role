@@ -11,7 +11,7 @@
 ; file.
 ; Relative path can also be used. They will be prefixed by:
 ;  - the global prefix if it's been set (-p argument)
-;  - {{ "/usr" if php_version is not defined else phpenv_root + "/versions/" + php_version }} otherwise
+;  - {{ phpenv_root }}/versions/{{ php_version }} otherwise
 ;include=etc/fpm.d/*.conf
 
 ;;;;;;;;;;;;;;;;;;

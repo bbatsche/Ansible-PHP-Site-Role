@@ -7,5 +7,4 @@ pear_dirs:
   temp_dir:     /tmp/phpenv/{{ php_version }}/pear
 
 log_dir:      "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
-session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
 composer_dir: "{{ phpenv_root }}/versions/{{ php_version }}/composer"

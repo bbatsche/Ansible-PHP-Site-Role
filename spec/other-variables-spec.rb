@@ -63,6 +63,10 @@ context "PHP FPM" do
 
     include_examples("curl request", "200")
     include_examples("curl request html")
+
+    it "read the nginx.conf file" do
+      expect(subject.stdout).to match /# Configuration File - Nginx Server Configs/
+    end
   end
 
   describe "Disables Functions" do
