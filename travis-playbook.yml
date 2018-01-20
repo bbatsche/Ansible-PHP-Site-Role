@@ -10,7 +10,7 @@
 
   roles:
     - role: bbatsche.Nginx
-      site_type: php
+      nginx_configs: [ "php.conf" ]
 
   tasks:
     - include: tasks/main.yml
