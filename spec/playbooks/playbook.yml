@@ -7,7 +7,7 @@
 
   roles:
     - role: bbatsche.Nginx
-      site_type: php
+      nginx_configs: [ "php.conf" ]
 
   post_tasks:
     - name: Truncate Error Log
