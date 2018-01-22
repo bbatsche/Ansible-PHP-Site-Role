@@ -13,3 +13,5 @@ copy_index_php: no
 timezone: Etc/UTC
 
 php_session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
+
+nginx_configs: [ "php.conf" ]
