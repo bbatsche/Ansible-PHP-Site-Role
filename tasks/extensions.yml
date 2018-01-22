@@ -33,6 +33,9 @@
   changed_when: no
   register: ext_dir
 
+- name: Create PECL Temp Directories & Update Channel
+  meta: flush_handlers
+
 - name: Install PECL Extensions
   phpenv:
     shell: yes '' | pecl install {{ item.name }}-{{ item.version }}
