@@ -20,7 +20,7 @@
 
 - name: Update PECL Channel
   phpenv:
-    command: pecl channel-update pecl.php.net
+    shell: pecl channel-update pecl.php.net
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
 
