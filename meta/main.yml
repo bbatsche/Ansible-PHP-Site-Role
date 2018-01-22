@@ -21,4 +21,4 @@ galaxy_info:
     - fpm
     - composer
 dependencies:
-  - { role: bbatsche.Nginx, nginx_configs: [ "php.conf" ] }
+  - { role: bbatsche.Nginx }
