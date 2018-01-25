@@ -48,7 +48,9 @@
     arguments: /tmp/{{ php_version }}
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
-  notify: Rehash Phpenv
+  notify:
+    - Rehash Phpenv
+    - Update PECL Channel
 
 - name: Copy FPM Init Script
   template: src=fpm-init.sh.j2 dest=/etc/init.d/php{{ php_version }}-fpm mode=0755

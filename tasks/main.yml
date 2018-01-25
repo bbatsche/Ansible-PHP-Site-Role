@@ -4,15 +4,15 @@
 
 - include: install.yml
 
-- include: extensions.yml
-
-- include: composer.yml
-
 - name: Copy Nginx Config
   template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/php.conf
   become: yes
   when: domain is defined
   notify: Restart Nginx
+
+- include: extensions.yml
+
+- include: composer.yml
 
 - name: Copy phpinfo.php
   copy: src=phpinfo.php dest={{ http_root }}/{{ domain }}/public/phpinfo.php

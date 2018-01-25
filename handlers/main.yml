@@ -18,10 +18,15 @@
   when: domain is defined
   become: yes
 
+- name: Update PECL Channel
+  phpenv:
+    shell: pecl channel-update pecl.php.net
+    php_version: "{{ php_version }}"
+    phpenv_root: "{{ phpenv_root }}"
+
 - name: Rehash Phpenv
   phpenv:
     command: rehash
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
-  when: php_version is defined
 
