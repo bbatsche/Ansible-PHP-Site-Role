@@ -33,8 +33,20 @@
   changed_when: no
   register: ext_dir
 
-- name: Create PECL Temp Directories & Update Channel
-  meta: flush_handlers
+- name: Create PECL Temp Directories
+  command: systemd-tmpfiles --create
+  when:
+    - ansible_connection | default('smart') != 'docker'
+    - ansible_distribution_release == "xenial"
+    - tempfile_result | changed or domain_tempfile_result | changed
+  become: yes
+
+- name: Update PECL Channel
+  phpenv:
+    shell: pecl channel-update pecl.php.net
+    php_version: "{{ php_version }}"
+    phpenv_root: "{{ phpenv_root }}"
+  when: install_php_result | changed
 
 - name: Install PECL Extensions
   phpenv:

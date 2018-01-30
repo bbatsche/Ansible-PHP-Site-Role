@@ -70,8 +70,8 @@
     regexp: "^d /tmp/phpenv/{{ item.path }} "
     create: yes
   become: yes
-  notify: Create Temp Files
   when: ansible_distribution_release == "xenial"
+  register: tempfile_result
   with_items:
     - { path: "{{ php_version }}",               mode: "02775" }
     - { path: "{{ php_version }}/opcache",       mode: "02770" }
@@ -86,7 +86,7 @@
     line: d /tmp/phpenv/{{ php_version }}/{{ domain }} 02770 www-data web-admin 1w
     create: yes
   become: yes
-  notify: Create Temp Files
+  register: domain_tempfile_result
   when:
     - domain is defined
     - ansible_distribution_release == "xenial"
