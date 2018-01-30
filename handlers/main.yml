@@ -8,21 +8,10 @@
   when: ansible_connection | default('smart') != 'docker'
   become: yes
 
-- name: Create Temp Files
-  command: systemd-tmpfiles --create
-  when: ansible_connection | default('smart') != 'docker'
-  become: yes
-
 - name: Restart FPM
   service: name=php{{ php_version }}-fpm state=restarted
   when: domain is defined
   become: yes
-
-- name: Update PECL Channel
-  phpenv:
-    shell: pecl channel-update pecl.php.net
-    php_version: "{{ php_version }}"
-    phpenv_root: "{{ phpenv_root }}"
 
 - name: Rehash Phpenv
   phpenv:
