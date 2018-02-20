@@ -38,7 +38,7 @@
   when:
     - ansible_connection | default('smart') != 'docker'
     - ansible_distribution_release == "xenial"
-    - tempfile_result | changed or domain_tempfile_result | changed
+    - tempfile_result is changed or domain_tempfile_result is changed
   become: yes
 
 - name: Update PECL Channel
@@ -46,7 +46,7 @@
     shell: pecl channel-update pecl.php.net
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
-  when: install_php_result | changed
+  when: install_php_result is changed
 
 - name: Install PECL Extensions
   phpenv:

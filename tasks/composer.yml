@@ -25,6 +25,8 @@
     phpenv_root: "{{ phpenv_root }}"
     php_version: "{{ php_version }}"
   register: composer_result
-  changed_when: composer_result | changed and 'Nothing to install or update' not in composer_result.stderr
+  changed_when:
+    - composer_result is changed
+    - "'Nothing to install or update' not in composer_result.stderr"
   notify: Rehash Phpenv
   with_items: "{{ composer_packages | default([]) }}"

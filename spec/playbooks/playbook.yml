@@ -7,7 +7,7 @@
 
   roles:
     - role: bbatsche.Nginx
-      nginx_configs: [ "php.conf" ]
+      nginx_configs: "{{ [ 'php-' + domain + '.conf' ] if domain is defined else [] }}"
 
   post_tasks:
     - name: Truncate Error Log
