@@ -1,7 +1,7 @@
 Ansible PHP Site Role
 ========================
 
-[![Build Status](https://travis-ci.org/bbatsche/Ansible-PHP-Site-Role.svg)](https://travis-ci.org/bbatsche/Ansible-PHP-Site-Role) [![Ansible Galaxy](https://img.shields.io/ansible/role/8731.svg)](https://galaxy.ansible.com/bbatsche/PHP)
+[![Build Status](https://travis-ci.org/bbatsche/Ansible-PHP-Site-Role.svg)](https://travis-ci.org/bbatsche/Ansible-PHP-Site-Role) [![Ansible Galaxy](https://img.shields.io/ansible/role/22583.svg)](https://galaxy.ansible.com/bbatsche/PHP)
 
 This Ansible role will install a given version of PHP on your server and set up a site in Nginx running PHP. The role uses [Phpenv](https://github.com/madumlao/phpenv) to manage the different versions of PHP. It should be able to install any version of PHP from 5.2 through 7.2 (although if you're installing PHP 5.2, you may need to seriously rethink your life choices ;-).
 
