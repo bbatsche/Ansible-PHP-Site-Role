@@ -5,7 +5,7 @@
 - include: install.yml
 
 - name: Copy Nginx Config
-  template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/php.conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/php-{{ domain }}.conf
   become: yes
   when: domain is defined
   notify: Restart Nginx
