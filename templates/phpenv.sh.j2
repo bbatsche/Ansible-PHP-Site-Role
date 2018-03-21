@@ -8,15 +8,7 @@ eval "$(phpenv init -)"
 {% if env_name == "dev" %}
 ## https://getcomposer.org/doc/articles/troubleshooting.md#xdebug-impact-on-composer ##
 
-# Load xdebug Zend extension with php command
+# Load xdebug Zend extension with php & phpunit commands
 alias php='php -dzend_extension=xdebug.so'
-
-# PHPUnit needs xdebug for coverage. In this case, make a function that calls either the vendor install binary, or global version.
-phpunit() {
-    if [ -e ./vendor/bin/phpunit ]; then
-        php ./vendor/bin/phpunit "$@"
-    else
-        php $(phpenv which phpunit) "$@"
-    fi
-}
+alias phpunit='phpunit -dzend_extension=xdebug.so'
 {% endif %}
