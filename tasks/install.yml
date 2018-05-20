@@ -21,7 +21,7 @@
     - libmcrypt-dev
     - libmysqlclient-dev
     - libpq-dev
-    - libpng12-dev
+    - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
     - libpspell-dev
     - libreadline-dev
     - librecode-dev
