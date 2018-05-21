@@ -33,13 +33,6 @@
     - re2c
   become: yes
 
-- name: Link gmp.h to a Usable Location
-  file:
-    src: /usr/include/x86_64-linux-gnu/gmp.h
-    dest: /usr/include/gmp.h
-    state: link
-  become: yes
-
 - name: Copy Phpenv Definition
   template: src=phpenv_definition.j2 dest=/tmp/{{ php_version }}
 
