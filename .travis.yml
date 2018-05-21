@@ -34,6 +34,7 @@ install:
 
   - travis_retry ansible-galaxy install bbatsche.Base
   - travis_retry ansible-galaxy install bbatsche.Nginx
+  - travis_retry ansible-galaxy install tersmitten.swapfile
 
   - mkdir -p $HOME/.ansible
   - sudo chown -R $USER:$USER $HOME/.ansible
