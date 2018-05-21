@@ -10,6 +10,9 @@
     - role: tersmitten.swapfile
       swapfile_size: 1G
       become: yes
+      when:
+        - ansible_connection | default('smart') != 'local'
+        - ansible_connection | default('smart') != 'docker'
 
   pre_tasks:
     - name: Install python2 for Ansible
