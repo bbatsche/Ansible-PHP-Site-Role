@@ -37,7 +37,7 @@
   command: systemd-tmpfiles --create
   when:
     - ansible_connection | default('smart') != 'docker'
-    - ansible_distribution_release == "xenial"
+    - ansible_distribution_release != "trusty"
     - tempfile_result is changed or domain_tempfile_result is changed
   become: yes
 

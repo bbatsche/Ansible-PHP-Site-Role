@@ -64,7 +64,7 @@
 - name: Copy FPM Systemd Config
   template: src=fpm-systemd.conf.j2 dest=/lib/systemd/system/php{{ php_version }}-fpm.service
   become: yes
-  when: ansible_distribution_release == "xenial"
+  when: ansible_distribution_release != "trusty"
   notify: Enable FPM Systemd Service
 
 - name: Delete Default FPM Config
