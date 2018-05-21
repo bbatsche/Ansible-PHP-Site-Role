@@ -1,8 +1,10 @@
 ---
 # Configure paths & directories, checkout PHPEnv
-- include: setup.yml
+- name: Setup Build Environment
+  import_tasks: setup.yml
 
-- include: install.yml
+- name: Install Phpenv & PHP
+  import_tasks: install.yml
 
 - name: Copy Nginx Config
   template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/php-{{ domain }}.conf
@@ -10,9 +12,11 @@
   when: domain is defined
   notify: Restart Nginx
 
-- include: extensions.yml
+- name: Install PECL Extensions
+  import_tasks: extensions.yml
 
-- include: composer.yml
+- name: Install Composer & Dependencies
+  import_tasks: composer.yml
 
 - name: Copy phpinfo.php
   copy: src=phpinfo.php dest={{ http_root }}/{{ domain }}/public/phpinfo.php

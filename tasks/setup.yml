@@ -1,4 +1,8 @@
 ---
+- name: Install Git
+  apt: name=git state=present
+  become: yes
+
 - name: Create Phpenv Directory
   file:
     path: "{{ phpenv_root }}"
@@ -70,7 +74,7 @@
     regexp: "^d /tmp/phpenv/{{ item.path }} "
     create: yes
   become: yes
-  when: ansible_distribution_release == "xenial"
+  when: ansible_distribution_release != "trusty"
   register: tempfile_result
   with_items:
     - { path: "{{ php_version }}",               mode: "02775" }
@@ -89,4 +93,4 @@
   register: domain_tempfile_result
   when:
     - domain is defined
-    - ansible_distribution_release == "xenial"
+    - ansible_distribution_release != "trusty"

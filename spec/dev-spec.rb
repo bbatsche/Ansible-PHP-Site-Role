@@ -1,4 +1,4 @@
-require_relative "bootstrap"
+require_relative "lib/bootstrap"
 
 RSpec.configure do |config|
   php_version = "7.1.10"

@@ -78,7 +78,4 @@ tmtags
 
 ### Other Files ###
 *.log
-/storage/*
-
-/spec/playbooks/*
-!/spec/playbooks/*.yml
+/roles/*

@@ -21,7 +21,7 @@
     - libmcrypt-dev
     - libmysqlclient-dev
     - libpq-dev
-    - libpng12-dev
+    - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
     - libpspell-dev
     - libreadline-dev
     - librecode-dev
@@ -31,13 +31,6 @@
     - libxslt1-dev
     - libyaml-dev
     - re2c
-  become: yes
-
-- name: Link gmp.h to a Usable Location
-  file:
-    src: /usr/include/x86_64-linux-gnu/gmp.h
-    dest: /usr/include/gmp.h
-    state: link
   become: yes
 
 - name: Copy Phpenv Definition
@@ -64,7 +57,7 @@
 - name: Copy FPM Systemd Config
   template: src=fpm-systemd.conf.j2 dest=/lib/systemd/system/php{{ php_version }}-fpm.service
   become: yes
-  when: ansible_distribution_release == "xenial"
+  when: ansible_distribution_release != "trusty"
   notify: Enable FPM Systemd Service
 
 - name: Delete Default FPM Config
