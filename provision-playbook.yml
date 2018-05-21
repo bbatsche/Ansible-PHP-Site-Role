@@ -7,6 +7,9 @@
 
   roles:
     - bbatsche.Base
+    - role: tersmitten.swapfile
+      swapfile_size: 1G
+      become: yes
 
   pre_tasks:
     - name: Install python2 for Ansible
