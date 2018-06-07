@@ -2,13 +2,9 @@
 - hosts: all
   gather_facts: false
 
-  vars:
-    swap_mb: 512
-
   roles:
     - bbatsche.Base
     - role: tersmitten.swapfile
-      swapfile_size: 1G
       become: yes
       when:
         - ansible_connection | default('smart') != 'local'
