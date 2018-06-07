@@ -27,5 +27,5 @@
   when: copy_index_php
 
 - name: Set Local PHP Version
-  copy: content={{ php_version }} dest={{ http_root }}/{{ domain }}
+  copy: content={{ php_version }} dest={{ http_root }}/{{ domain }}/.php-version
   when: domain is defined
