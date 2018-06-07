@@ -25,3 +25,7 @@
 - name: Copy index.php
   template: src=index.php.j2 dest={{ http_root }}/{{ domain }}/public/index.php
   when: copy_index_php
+
+- name: Set Local PHP Version
+  copy: content={{ php_version }} dest={{ http_root }}/{{ domain }}
+  when: domain is defined
