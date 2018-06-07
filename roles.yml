@@ -1,0 +1,4 @@
+---
+- src: bbatsche.Base
+- src: bbatsche.Nginx
+- src: tersmitten.swapfile
