@@ -6,6 +6,7 @@ require "json"
 
 class DockerEnv
   attr_reader :name, :image
+  attr_accessor :use_python3
 
   def initialize(name, image)
     @name  = name
@@ -29,7 +30,7 @@ class DockerEnv
 
     inventory.close
 
-    command = "ansible-playbook", "-i", inventory.path, "-l", @name, "provision-playbook.yml", "-e", config_data["ansible"]["vars"].to_json
+    command = "ansible-playbook", "-i", inventory.path, "-l", name, "provision-playbook.yml", "-e", config_data["ansible"]["vars"].to_json
 
     output = []
     IO.popen(command, {:err => [:child, :out]}) do |io|
@@ -54,7 +55,13 @@ class DockerEnv
   def container
     @container \
       || @container = Docker::Container.all(all: true, filters: { name: [name] }.to_json).first \
-      || @container = Docker::Container.create("Cmd" => ["/sbin/init"], "Image" => image.id, "name" => name, "Privileged" => true)
+      || @container = Docker::Container.create({
+        "Cmd" => ["sleep", "infinity"],
+        "Image" => image.id,
+        "name" => name,
+        "Privileged" => true,
+        "Init" => true
+      })
   end
 
   def id
@@ -62,6 +69,6 @@ class DockerEnv
   end
 
   def inventory_line
-    "#{@name} ansible_connection=docker ansible_user=root"
+    "#{name} ansible_connection=docker ansible_user=root" + (use_python3 ? " ansible_python_interpreter=/usr/bin/python3" : "")
   end
 end
