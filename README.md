@@ -27,6 +27,7 @@ Role Variables
 - `php_max_file_uploads` &mdash; Maximum number of files that can be uploaded simultaneously. Default is 20
 - `timezone` &mdash; Timezone that should be configured in PHP. Default is "Etc/UTC"
 - `mysql_socket` &mdash; Path to default MySQL socket for use when connecting to localhost.
+- `install_mariadb` &mdash; Install MariaDB client libraries, rather than the default MySQL libraries. Default is no
 - `php_session_save_handler` &mdash; Handler for saving sessions. Can be used to save session data to Redis, for example. Default is "files"
 - `php_session_path` &mdash; Path to store session data in. Default is "`{{ phpenv_root }}/versions/{{ php_version }}/var/run/session`"
 - `php_realpath_cache_size` &mdash; Size of cache used for looking up file & directory's real paths. Default is "256k"

@@ -15,3 +15,5 @@ timezone: Etc/UTC
 php_session_path: "{{ phpenv_root }}/versions/{{ php_version }}/var/run/session"
 
 nginx_configs: "{{ [ 'php-' + domain + '.conf' ] if domain is defined else [] }}"
+
+install_mariadb: no
