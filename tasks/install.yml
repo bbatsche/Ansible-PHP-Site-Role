@@ -19,7 +19,7 @@
     - libmagickcore-dev
     - libmagickwand-dev
     - libmcrypt-dev
-    - "{{ 'libmariadbclient-dev' if install_mariadb else 'libmysqlclient-dev' }}"
+    - "{{ 'libmariadb-dev-compat' if install_mariadb else 'libmysqlclient-dev' }}"
     - libpq-dev
     - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
     - libpspell-dev
