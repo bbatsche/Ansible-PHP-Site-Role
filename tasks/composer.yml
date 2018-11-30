@@ -5,7 +5,7 @@
 
 - name: Download Composer Installer
   get_url: url=https://getcomposer.org/installer dest=/tmp/install-composer.php
-  when: composer_result.stat.exists == false
+  when: not composer_result.stat.exists
 
 - name: Create Composer Directory
   file: path={{ composer_dir }} state=directory
@@ -29,4 +29,4 @@
     - composer_result is changed
     - "'Nothing to install or update' not in composer_result.stderr"
   notify: Rehash Phpenv
-  with_items: "{{ composer_packages | default([]) }}"
+  loop: "{{ composer_packages | default([]) }}"

@@ -1,11 +1,11 @@
 ---
 dynamic_php: no
 
-phpenv_version: "0852611"
-phpenv_composer_version: "1a6611d"
-php_build_version: "d18e86e"
+phpenv_version:          8e2f7b5664f7a772fda0b84ce17ee477a92dfb12
+phpenv_composer_version: 1a6611d
+php_build_version:       804e49c2469acf505813ee9930abdb8e9e04cf91
 
-xdebug_version: 2.6.0
+xdebug_version: 2.6.1
 
 copy_phpinfo: no
 copy_index_php: no

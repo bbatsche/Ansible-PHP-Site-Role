@@ -1,36 +1,37 @@
 ---
 - name: Install Build Dependencies
-  apt: name={{ item }} state=present
-  with_items:
-    - aspell
-    - aspell-en
-    - autoconf
-    - automake
-    - bison
-    - build-essential
-    - libtool
-    - libaspell-dev
-    - libbz2-dev
-    - libcurl4-openssl-dev
-    - libfreetype6-dev
-    - libgmp-dev
-    - libicu-dev
-    - libjpeg-dev
-    - libmagickcore-dev
-    - libmagickwand-dev
-    - libmcrypt-dev
-    - "{{ 'libmariadb-dev-compat' if install_mariadb else 'libmysqlclient-dev' }}"
-    - libpq-dev
-    - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
-    - libpspell-dev
-    - libreadline-dev
-    - librecode-dev
-    - libssl-dev
-    - libxml2-dev
-    - libxpm-dev
-    - libxslt1-dev
-    - libyaml-dev
-    - re2c
+  apt:
+    name:
+      - aspell
+      - aspell-en
+      - autoconf
+      - automake
+      - bison
+      - build-essential
+      - libtool
+      - libaspell-dev
+      - libbz2-dev
+      - libcurl4-openssl-dev
+      - libfreetype6-dev
+      - libgmp-dev
+      - libicu-dev
+      - libjpeg-dev
+      - libmagickcore-dev
+      - libmagickwand-dev
+      - libmcrypt-dev
+      - "{{ 'libmariadb-dev-compat' if install_mariadb else 'libmysqlclient-dev' }}"
+      - libpq-dev
+      - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
+      - libpspell-dev
+      - libreadline-dev
+      - librecode-dev
+      - libssl-dev
+      - libxml2-dev
+      - libxpm-dev
+      - libxslt1-dev
+      - libyaml-dev
+      - re2c
+    state: present
   become: yes
 
 - name: Copy Phpenv Definition
@@ -111,7 +112,7 @@
     owner: www-data
     group: web-admin
   become: yes
-  when: error_log_stat.stat.exists == false
+  when: not error_log_stat.stat.exists
 
 - name: Check for FPM Error Log
   stat: path={{ log_dir }}/fpm-error.log
@@ -125,7 +126,7 @@
     owner: www-data
     group: web-admin
   become: yes
-  when: fpm_error_log_stat.stat.exists == false
+  when: not fpm_error_log_stat.stat.exists
 
 - block:
   - name: Check for Domain Slow Log
@@ -140,6 +141,5 @@
       owner: www-data
       group: web-admin
     become: yes
-    when: slow_log_stat.stat.exists == false
+    when: not slow_log_stat.stat.exists
   when: domain is defined
-
