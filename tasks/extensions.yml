@@ -12,7 +12,7 @@
     php_version: "{{ php_version }}"
   changed_when: no
   register: current_pear_dir
-  loop: "{{ pear_dirs | dict2items }}"
+  loop: "{{ lookup('dict', pear_dirs) }}"
 
 - name: Set Pear Directories
   phpenv:
