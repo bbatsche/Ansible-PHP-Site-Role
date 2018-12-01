@@ -42,7 +42,7 @@
 
 - name: Install Phpenv
   git:
-    repo: https://github.com/madumlao/phpenv.git
+    repo: https://github.com/phpenv/phpenv.git
     dest: "{{ phpenv_root }}"
     version: "{{ phpenv_version }}"
     update: no
@@ -76,7 +76,7 @@
   become: yes
   when: ansible_distribution_release != "trusty"
   register: tempfile_result
-  with_items:
+  loop:
     - { path: "{{ php_version }}",               mode: "02775" }
     - { path: "{{ php_version }}/opcache",       mode: "02770" }
     - { path: "{{ php_version }}/pear",          mode: "02770" }

@@ -1,7 +1,4 @@
 ---
-# Note: Do not put use template or file tasks when in a tasks sub directory!
-# Ansible 1.9 will not determine the path correctly.
-
 - name: Enable ZendOpcache
   lineinfile:
     dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/10-opcache.ini"
@@ -15,7 +12,7 @@
     php_version: "{{ php_version }}"
   changed_when: no
   register: current_pear_dir
-  with_dict: "{{ pear_dirs }}"
+  loop: "{{ lookup('dict', pear_dirs) }}"
 
 - name: Set Pear Directories
   phpenv:
@@ -23,7 +20,7 @@
     phpenv_root: "{{ phpenv_root }}"
     php_version: "{{ php_version }}"
   when: pear_dirs[item.item.key] != item.stdout
-  with_items: "{{ current_pear_dir.results }}"
+  loop: "{{ current_pear_dir.results }}"
 
 - name: Find Extension Directory
   phpenv:
@@ -54,15 +51,16 @@
     creates: "{{ ext_dir.stdout }}/{{ item.name }}.so"
     phpenv_root: "{{ phpenv_root }}"
     php_version: "{{ php_version }}"
-  with_items: "{{ pecl_extensions | default([]) }}"
+  loop: "{{ pecl_extensions | default([]) }}"
 
 - name: Enable PECL Extensions
   lineinfile:
     dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/{{ item.weight | default(20) }}-{{ item.name }}.ini"
     line: "extension={{ item.name }}.so"
     create: yes
-  with_items: "{{ pecl_extensions | default([]) }}"
+  loop: "{{ pecl_extensions | default([]) }}"
 
+# Xdebug is enabled by phpenv.sh profile script
 - name: Install Xdebug
   phpenv:
     shell: pecl install xdebug-{{ xdebug_version }}
@@ -70,5 +68,3 @@
     phpenv_root: "{{ phpenv_root }}"
     php_version: "{{ php_version }}"
   when: env_name == "dev"
-
-# Xdebug is enabled by phpenv.sh profile script

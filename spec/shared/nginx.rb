@@ -2,9 +2,7 @@ require "serverspec"
 require "date"
 
 shared_examples "nginx" do |use_ssl=false|
-  describe command("nginx -t") do
-    let(:disable_sudo) { false }
-
+  describe command("nginx -t"), :sudo => true do
     it "has no errors" do
       expect(subject.stderr).to match /configuration file [[:graph:]]+ syntax is ok/
       expect(subject.stderr).to match /configuration file [[:graph:]]+ test is successful/
@@ -51,7 +49,7 @@ shared_examples "curl request html" do
   end
 
   it "disallows other sites from embedding in a frame" do
-    expect(subject.stdout.gsub(/\r/, '')).to match /^X-Frame-Options: SAMEORIGIN$/i
+    expect(subject.stdout.gsub(/\r/, '')).to match /^X-Frame-Options: DENY$/i
   end
 
   it "disallows content type sniffing" do

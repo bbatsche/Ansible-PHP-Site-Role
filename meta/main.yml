@@ -3,7 +3,7 @@ galaxy_info:
   author: Ben Batschelet
   description: Install Phpenv, PHP, and set up a site in Nginx running it with PHP-FPM
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
   - name: Ubuntu
     versions:

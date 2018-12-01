@@ -18,4 +18,3 @@
     command: rehash
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
-
