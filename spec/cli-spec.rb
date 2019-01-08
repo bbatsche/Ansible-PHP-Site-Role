@@ -68,7 +68,7 @@ context "Composer packages" do
     let(:subject) { command("composer about") }
 
     it "is installed" do
-      expect(subject.stdout).to match /Composer - Package Management for PHP/
+      expect(subject.stdout).to match /Composer - Dependency Manager for PHP/
     end
 
     include_examples("no errors")
