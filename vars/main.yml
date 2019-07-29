@@ -8,3 +8,38 @@ pear_dirs:
 
 log_dir:      "{{ phpenv_root }}/versions/{{ php_version }}/var/log"
 composer_dir: "{{ phpenv_root }}/versions/{{ php_version }}/composer"
+
+__php_apt_dependencies:
+  - aspell
+  - aspell-en
+  - autoconf
+  - automake
+  - bison
+  - build-essential
+  - libaspell-dev
+  - libbz2-dev
+  - libcurl4-openssl-dev
+  - libfreetype6-dev
+  - libgmp-dev
+  - libicu-dev
+  - libjpeg-dev
+  - libmagickcore-dev
+  - libmagickwand-dev
+  - libmcrypt-dev
+  - libsodium-dev
+  - libtool
+  - libpq-dev
+  - libpspell-dev
+  - libreadline-dev
+  - librecode-dev
+  - libssl-dev
+  - libxml2-dev
+  - libxpm-dev
+  - libxslt1-dev
+  - libyaml-dev
+  - libzip-dev
+  - re2c
+  - "{{ 'libmariadb-dev-compat' if install_mariadb else 'libmysqlclient-dev' }}"
+  - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
+
+php_apt_dependencies: "{{ __php_apt_dependencies | union(['libargon2-0-dev'] if ansible_distribution_release == 'bionic' else []) }}"

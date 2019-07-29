@@ -1,10 +1,9 @@
 require_relative "lib/bootstrap"
 
 RSpec.configure do |config|
-  php_version = "7.1.10"
+  php_version = "7.2.20"
 
   config.before :suite do
-
     AnsibleHelper.playbook("playbooks/playbook.yml", ENV["TARGET_HOST"], {
       php_version: php_version,
       domain: "php-variables.dev",

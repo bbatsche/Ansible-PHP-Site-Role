@@ -1,30 +1,20 @@
 require_relative "lib/bootstrap"
 
 RSpec.configure do |config|
-  config.before :suite do
-    php_version = "7.1.10"
+  php_version = "7.2.20"
 
+  config.before :suite do
     AnsibleHelper.playbook("playbooks/playbook.yml", ENV["TARGET_HOST"], {
       php_version: php_version,
-      pecl_extensions: [{
-        name: "yaml",
-        version: "2.0.2"
-      }, {
-        name: "imagick",
-        version: "3.4.3"
-      }, {
-        name: "redis",
-        version: "3.1.4"
-      }],
       composer_packages: [{
         name: "phpunit/phpunit",
-        version: "6.4.*"
+        version: "7.5.*"
       }, {
         name: "phpspec/phpspec",
-        version: "4.0.*"
+        version: "5.1.*"
       }, {
         name: "psy/psysh",
-        version: "0.8.*"
+        version: "0.9.*"
       }]
     })
 
@@ -33,8 +23,8 @@ RSpec.configure do |config|
     set :docker_container_exec_options, { :Env => ["PHPENV_VERSION=#{php_version}", "COMPOSER_ALLOW_SUPERUSER=1"] }
   end
 
-  config.before :each do
-    @php_version = "7.1.10"
+  config.before :all do
+    @php_version = php_version
   end
 end
 
@@ -51,16 +41,19 @@ describe "PHP Config" do
 
   include_examples("default phpinfo config")
 
-  include_examples("phpinfo", "error_log", "/usr/local/phpenv/versions/7.1.10/var/log/error.log")
+  it "has the correct error log path" do
+    expect(php_info).to match %r|^error_log => /usr/local/phpenv/versions/#{@php_version}/var/log/error.log|
+  end
+
 
   include_examples("phpinfo", "imagick module", "enabled")
-  include_examples("phpinfo", "imagick module version", "3.4.3")
+  include_examples("phpinfo", "imagick module version", "3.4.4")
 
   include_examples("phpinfo", "Redis Support", "enabled")
-  include_examples("phpinfo", "Redis Version", "3.1.4")
+  include_examples("phpinfo", "Redis Version", "5.0.2")
 
   include_examples("phpinfo", "LibYAML Support", "enabled")
-  include_examples("phpinfo", "Module Version", "2.0.2")
+  include_examples("phpinfo", "Module Version", "2.0.4")
 end
 
 context "Composer packages" do
@@ -78,7 +71,7 @@ context "Composer packages" do
     let(:subject) { command("phpunit --version") }
 
     it "is installed" do
-      expect(subject.stdout).to match /^PHPUnit 6\.4\.\d+/
+      expect(subject.stdout).to match /^PHPUnit 7\.5\.\d+/
     end
 
     include_examples("no errors")
@@ -88,7 +81,7 @@ context "Composer packages" do
     let(:subject) { command("psysh --version") }
 
     it "is installed" do
-      expect(subject.stdout).to match /Psy Shell v0\.8\.\d+/
+      expect(subject.stdout).to match /Psy Shell v0\.9\.\d+/
     end
 
     include_examples("no errors")
@@ -98,7 +91,7 @@ context "Composer packages" do
     let(:subject) { command("phpspec --version") }
 
     it "is installed" do
-      expect(subject.stdout).to match /phpspec 4\.0\.\d+/
+      expect(subject.stdout).to match /phpspec 5\.1\.\d+/
     end
 
     include_examples("no errors")

@@ -1,10 +1,9 @@
 require_relative "lib/bootstrap"
 
 RSpec.configure do |config|
-  php_version = "7.1.10"
+  php_version = "7.2.20"
 
   config.before :suite do
-
     AnsibleHelper.playbook("playbooks/playbook.yml", ENV["TARGET_HOST"], {
       php_version: php_version,
       domain: "php-prod.dev",
@@ -35,8 +34,6 @@ end
 
 describe "PHP Config" do
   let(:php_info) { command("php -i").stdout }
-
-  @php_version = "7.1.10"
 
   include_examples("default phpinfo config")
 
@@ -82,11 +79,13 @@ context "PHP FPM" do
     let(:php_info) { command("curl php-prod.dev/phpinfo.php").stdout }
 
     include_examples("phpinfo html row",     "session.save_handler",      "files")
-    include_examples("phpinfo html row",     "session.save_path",         "/usr/local/phpenv/versions/7.1.10/var/run/session")
     include_examples("phpinfo html row",     "session.serialize_handler", "php_serialize")
     include_examples("phpinfo html row",     "ENV_NAME",                  "prod")
     include_examples("phpinfo html row",     "$_SERVER['ENV_NAME']",      "prod")
 
+    it "has the correct path for sessions" do
+      expect(php_info).to match %r|<td class="e">\s*session\.save_path\s*</td>\s*<td class="v">\s*/usr/local/phpenv/versions/#{@php_version}/var/run/session\s*</td>|
+    end
     it "does not have xdebug included" do
       expect(php_info).to_not match /xdebug/
     end

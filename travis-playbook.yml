@@ -6,14 +6,14 @@
     - vars/main.yml
 
   vars:
-    php_version: "7.1.10"
+    php_version: "7.2.20"
     pecl_extensions:
       - name: yaml
-        version: 2.0.2
+        version: 2.0.4
     composer_packages:
       - name: phpunit/phpunit
         version: ^6.4
-    
+
   roles:
     - role: bbatsche.Nginx
       nginx_configs: [ "php.conf" ]

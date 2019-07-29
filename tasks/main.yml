@@ -12,9 +12,6 @@
   when: domain is defined
   notify: Restart Nginx
 
-- name: Install PECL Extensions
-  import_tasks: extensions.yml
-
 - name: Install Composer & Dependencies
   import_tasks: composer.yml
 

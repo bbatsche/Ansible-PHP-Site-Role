@@ -49,7 +49,7 @@
 
 - name: Install PHP-Build Plugin
   git:
-    repo: https://github.com/php-build/php-build.git
+    repo: https://github.com/bbatsche/php-build.git
     dest: "{{ phpenv_root }}/plugins/php-build"
     version: "{{ php_build_version }}"
     update: no

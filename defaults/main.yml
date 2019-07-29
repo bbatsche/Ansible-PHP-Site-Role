@@ -3,9 +3,25 @@ dynamic_php: no
 
 phpenv_version:          8e2f7b5664f7a772fda0b84ce17ee477a92dfb12
 phpenv_composer_version: 1a6611d
-php_build_version:       804e49c2469acf505813ee9930abdb8e9e04cf91
+php_build_version:       808af82
 
-xdebug_version: 2.6.1
+xdebug_version: 2.7.2
+
+__phpenv_config_options:
+  - "--enable-sysvmsg"
+  - "--with-freetype-dir /usr"
+  - "--with-gettext /usr"
+  - "--with-gmp /usr/include/x86_64-linux-gnu"
+  - "--with-iconv"
+  - "--with-pdo-pgsql"
+  - "--with-pspell"
+  - "--without-tidy"
+  - "{{ '--with-sodium' if php_version is version('7.2.0', '>=') else '--with-mcrypt' }}"
+
+phpenv_config_options: "{{ __phpenv_config_options | union(['--with-password-argon2'] if  php_version is version('7.3.0', '>=') and ansible_distribution_release == 'bionic' else []) }}"
+
+phpenv_config_options_removed:
+  - "--with-tidy"
 
 copy_phpinfo: no
 copy_index_php: no

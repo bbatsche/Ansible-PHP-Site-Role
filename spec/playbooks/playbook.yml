@@ -5,6 +5,16 @@
     - ../../defaults/main.yml
     - ../../vars/main.yml
 
+  vars:
+    php_version: 7.2.20
+    pecl_extensions:
+      - name:    yaml
+        version: 2.0.4
+      - name:    imagick
+        version: 3.4.4
+      - name:    redis
+        version: 5.0.2
+
   roles:
     - role: bbatsche.Nginx
       nginx_configs: "{{ [ 'php-' + domain + '.conf' ] if domain is defined else [] }}"
