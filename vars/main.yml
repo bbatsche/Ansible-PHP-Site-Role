@@ -39,6 +39,7 @@ __php_apt_dependencies:
   - libyaml-dev
   - libzip-dev
   - re2c
+  - wget
   - "{{ 'libmariadb-dev-compat' if install_mariadb else 'libmysqlclient-dev' }}"
   - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
 
