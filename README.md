@@ -36,6 +36,8 @@ Role Variables
 - `php_default_socket_timeout` &mdash; Timeout when waiting for data from a socket. Default is 60
 - `php_memory_limit` &mdash; Maximum amount of memory PHP is allowed to allocate for a single process. Default is "128M"
 - `php_version` &mdash; Version of PHP to install with Phpenv.
+- `phpenv_config_options` &mdash; List of flags to pass to PHP configure command (in addition to the defaults already included with Phpenv). Default: see [defaults/main.yml](defaults/main.yml)
+- `phpenv_config_options_removed` &mdash; List of flags to _remove_ from Phpenv's standard list. Default is just `--with-tidy`
 - `pecl_extensions` &mdash; A list of additional extension to install from [PECL](https://pecl.php.net/). Each value should have a `name` and a `version`
 - `composer_packages` &mdash; A list of composer packages to install globally. Each value should have a `name` and a `version` property.
 - `phpenv_version` &mdash; Version of [Phpenv](https://github.com/madumlao/phpenv) to install. Default is a Git SHA: "0852611"

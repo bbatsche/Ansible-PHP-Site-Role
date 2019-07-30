@@ -2,6 +2,7 @@ export PHPENV_ROOT={{ phpenv_root }}
 export PATH="$PHPENV_ROOT/bin:$PATH"
 
 export ENV_NAME={{ env_name }}
+export COMPOSER_MEMORY_LIMIT=-1
 
 eval "$(phpenv init -)"
 

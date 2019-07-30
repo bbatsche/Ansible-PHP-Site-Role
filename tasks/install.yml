@@ -1,49 +1,31 @@
 ---
 - name: Install Build Dependencies
   apt:
-    name:
-      - aspell
-      - aspell-en
-      - autoconf
-      - automake
-      - bison
-      - build-essential
-      - libtool
-      - libaspell-dev
-      - libbz2-dev
-      - libcurl4-openssl-dev
-      - libfreetype6-dev
-      - libgmp-dev
-      - libicu-dev
-      - libjpeg-dev
-      - libmagickcore-dev
-      - libmagickwand-dev
-      - libmcrypt-dev
-      - "{{ 'libmariadb-dev-compat' if install_mariadb else 'libmysqlclient-dev' }}"
-      - libpq-dev
-      - "{{ 'libpng-dev' if ansible_distribution_release == 'bionic' else 'libpng12-dev' }}"
-      - libpspell-dev
-      - libreadline-dev
-      - librecode-dev
-      - libssl-dev
-      - libxml2-dev
-      - libxpm-dev
-      - libxslt1-dev
-      - libyaml-dev
-      - re2c
+    name: "{{ php_apt_dependencies }}"
     state: present
   become: yes
 
 - name: Copy Phpenv Definition
   template: src=phpenv_definition.j2 dest=/tmp/{{ php_version }}
 
-- name: Install PHP
+- name: Install PHP {{ php_version }}
   phpenv:
     arguments: /tmp/{{ php_version }}
     php_version: "{{ php_version }}"
     phpenv_root: "{{ phpenv_root }}"
   notify: Rehash Phpenv
   register: install_php_result
+
+- name: Enable ZendOpcache
+  lineinfile:
+    dest: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/opcache.ini"
+    line: "zend_extension=opcache.so"
+    create: yes
+
+- name: Remove Default Xdebug Config
+  file:
+    name: "{{ phpenv_root }}/versions/{{ php_version }}/etc/conf.d/xdebug.ini"
+    state: absent
 
 - name: Copy FPM Init Script
   template: src=fpm-init.sh.j2 dest=/etc/init.d/php{{ php_version }}-fpm mode=0755

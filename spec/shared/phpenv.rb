@@ -49,7 +49,6 @@ shared_examples "default phpinfo config" do
   include_examples("phpinfo", "iconv support", "enabled")
   include_examples("phpinfo", "Internationalization support", "enabled")
   include_examples("phpinfo", "PSpell Support", "enabled")
-  include_examples("phpinfo", "error_log", "/usr/local/phpenv/versions/#{@php_version}/var/log/error.log") unless @php_version.nil?
 end
 
 shared_examples "phpinfo html heading" do |key, value|
@@ -67,12 +66,17 @@ end
 shared_examples "supports sessions" do |url|
   describe "session_test.php" do
     let(:subject) { command("curl -i #{url}/session_test.php") }
+    let(:cookie)  { subject.stdout.each_line.find { |line| line =~ /Set-Cookie: PHPSESSID=/}}
 
     include_examples("curl request", "200")
-
     include_examples("curl request html")
 
-    it 'has an active session' do
+    it "uses httponly same site cookies" do
+      expect(cookie).to match /HttpOnly/
+      expect(cookie).to match /SameSite=Lax/
+    end
+
+    it "has an active session" do
       expect(subject.stdout).to match /^2$/ # 2 == PHP_SESSION_ACTIVE
     end
   end
