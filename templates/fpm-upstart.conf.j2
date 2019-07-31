@@ -14,9 +14,6 @@ stop on runlevel [016]
 pre-start script
     mkdir -p -m02775 /tmp/phpenv/{{ php_version }}
     mkdir -p -m02777 /tmp/phpenv/{{ php_version }}/opcache
-    mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/pear
-    mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/pear/cache
-    mkdir -p -m02770 /tmp/phpenv/{{ php_version }}/pear/download
 
     for conf in {{ phpenv_root }}/versions/{{ php_version }}/etc/pool.d/*.conf; do
         file=${conf##*/}

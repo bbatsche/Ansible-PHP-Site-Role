@@ -79,9 +79,6 @@
   loop:
     - { path: "{{ php_version }}",               mode: "02775" }
     - { path: "{{ php_version }}/opcache",       mode: "02770" }
-    - { path: "{{ php_version }}/pear",          mode: "02770" }
-    - { path: "{{ php_version }}/pear/cache",    mode: "02770" }
-    - { path: "{{ php_version }}/pear/download", mode: "02770" }
 
 - name: Add Domain to Tempfiles
   lineinfile:
