@@ -39,7 +39,7 @@ listen = {{ phpenv_root }}/versions/{{ php_version }}/var/run/{{ domain }}.sock
 
 ; Set listen(2) backlog.
 ; Default Value: 65535 (-1 on FreeBSD and OpenBSD)
-listen.backlog = -1
+listen.backlog = 32768
 
 ; Set permissions for unix socket, if one is used. In Linux, read/write
 ; permissions must be set in order to allow connections from a web server. Many
